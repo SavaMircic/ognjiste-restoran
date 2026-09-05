@@ -1,0 +1,55 @@
+@if (gotovo()) {
+  <og-auth-okvir naslov="Lozinka je promenjena">
+    <div class="ishod">
+      <span class="znak uspeh" aria-hidden="true">✓</span>
+      <p>Nova lozinka je sačuvana. Možete se prijaviti.</p>
+      <a routerLink="/prijava" class="btn-outline">Prijavi se</a>
+    </div>
+  </og-auth-okvir>
+} @else if (nepotpunLink()) {
+  <og-auth-okvir naslov="Neispravan link">
+    <div class="ishod">
+      <span class="znak greska" aria-hidden="true">✕</span>
+      <p>Link nije potpun. Otvorite ga direktno iz mejla, bez prepisivanja adrese.</p>
+      <a routerLink="/zaboravljena-lozinka" class="btn-outline">Zatraži nov link</a>
+    </div>
+  </og-auth-okvir>
+} @else {
+  <og-auth-okvir naslov="Nova lozinka" [podnaslov]="'Postavljate novu lozinku za ' + email() + '.'">
+    <form [formGroup]="forma" (ngSubmit)="posalji()" novalidate>
+      <label class="polje">
+        <span>Nova lozinka <em>*</em></span>
+        <input type="password" formControlName="novaLozinka" autocomplete="new-password" autofocus />
+        @if (forma.controls.novaLozinka.getError('server'); as serverska) {
+          <small class="greska-polja">{{ serverska }}</small>
+        }
+      </label>
+
+      <ul class="pravila">
+        @for (p of pravila; track p.tekst) {
+          <li [class.ispunjeno]="ispunjeno(p.vazi)">
+            <span aria-hidden="true">{{ ispunjeno(p.vazi) ? '✓' : '○' }}</span>
+            {{ p.tekst }}
+          </li>
+        }
+      </ul>
+
+      <label class="polje">
+        <span>Potvrda lozinke <em>*</em></span>
+        <input type="password" formControlName="potvrda" autocomplete="new-password" />
+        @if (forma.controls.potvrda.touched && forma.hasError('nepoklapanje')) {
+          <small class="greska-polja">Lozinke se ne poklapaju.</small>
+        }
+      </label>
+
+      @if (greska()) {
+        <p class="greska-opsta">{{ greska() }}</p>
+        <a routerLink="/zaboravljena-lozinka" class="btn-outline">Zatraži nov link</a>
+      }
+
+      <button type="submit" class="btn" [disabled]="salje()">
+        {{ salje() ? 'Čuva se…' : 'Sačuvaj lozinku' }}
+      </button>
+    </form>
+  </og-auth-okvir>
+}

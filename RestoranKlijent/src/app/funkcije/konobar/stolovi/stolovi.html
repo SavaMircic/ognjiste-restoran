@@ -1,0 +1,76 @@
+<div class="alatka">
+  @if (!ucitava() && !greska()) {
+    <div class="pregled">
+      <span><strong>{{ brojSlobodnih() }}</strong> slobodnih</span>
+      <span class="razmak">·</span>
+      <span><strong>{{ karte().length - brojSlobodnih() }}</strong> zauzetih</span>
+
+      @if (ukupnoSpremno() > 0) {
+        <span class="spremno-ukupno">
+          {{ ukupnoSpremno() }} za odnošenje
+        </span>
+      }
+    </div>
+  }
+
+  <button type="button" class="btn-outline" (click)="ucitaj()" [disabled]="ucitava()">Osveži</button>
+</div>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else {
+  <div class="grid">
+    @for (k of karte(); track k.sto.id) {
+      <button
+        type="button"
+        class="sto"
+        [class.zauzet]="k.porudzbina"
+        [class.rezervisan]="!k.porudzbina && k.sto.trenutniStatus === 'Rezervisan'"
+        [class.ima-spremno]="k.spremno > 0"
+        [disabled]="otvaraSe() === k.sto.id"
+        (click)="otvori(k)"
+      >
+        <span class="broj">{{ k.sto.brojStola }}</span>
+        <span class="kapacitet">{{ k.sto.kapacitet }} mesta</span>
+
+        @if (k.porudzbina) {
+          <span class="brojaci">
+            @if (k.poslato > 0) {
+              <span class="brojac poslato" title="Poslato u kuhinju/šank">{{ k.poslato }}</span>
+            }
+            @if (k.uPripremi > 0) {
+              <span class="brojac u-pripremi" title="U pripremi">{{ k.uPripremi }}</span>
+            }
+            @if (k.spremno > 0) {
+              <span class="brojac spremno" title="Spremno za odnošenje">{{ k.spremno }}</span>
+            }
+            @if (!k.poslato && !k.uPripremi && !k.spremno) {
+              <span class="prazna">bez stavki</span>
+            }
+          </span>
+        } @else {
+          <span class="stanje">
+            {{ otvaraSe() === k.sto.id ? 'Otvaranje…' : nazivStatusa[k.sto.trenutniStatus] }}
+          </span>
+        }
+      </button>
+    } @empty {
+      <div class="poruka">
+        <h3>Nijedan sto nije postavljen</h3>
+        <p>Stolove u salu unosi administrator — bez njih se porudžbina ne može otvoriti.</p>
+      </div>
+    }
+  </div>
+
+  <p class="napomena">
+    Prazan sto se dodirom otvara i odmah prelazi na porudžbinu. Sto sa otvorenom
+    porudžbinom vodi na njen detalj. Brojevi su stavke: sivo je poslato, žuto u pripremi,
+    zeleno spremno za odnošenje.
+  </p>
+}

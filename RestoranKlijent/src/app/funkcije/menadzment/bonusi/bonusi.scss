@@ -1,0 +1,235 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+
+  .polje {
+    min-width: 240px;
+  }
+}
+
+.forma {
+  margin-bottom: var(--r-4);
+}
+
+.primaoci {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+
+  .meta {
+    margin: 0;
+  }
+}
+
+.zaglavlje-primalaca {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+}
+
+.oznaka-polja {
+  font-size: 13px;
+  color: var(--tekst-2);
+
+  em {
+    font-style: normal;
+    color: var(--bakar);
+  }
+}
+
+.brojac {
+  margin-left: var(--r-2);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--bakar);
+  border: 1px solid var(--bakar);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.brzi {
+  display: flex;
+  gap: var(--r-1);
+
+  button {
+    background: transparent;
+    border: 1px solid var(--ivica);
+    border-radius: var(--zaobljenje);
+    color: var(--tekst-3);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 5px 12px;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--bakar);
+      color: var(--tekst-2);
+    }
+  }
+}
+
+.cipovi {
+  display: flex;
+  gap: var(--r-1);
+  flex-wrap: wrap;
+}
+
+.cip {
+  display: flex;
+  align-items: baseline;
+  gap: var(--r-1);
+  background: transparent;
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  color: var(--tekst-2);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 7px 14px;
+  cursor: pointer;
+
+  small {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tekst-3);
+  }
+
+  &:hover {
+    border-color: var(--bakar);
+  }
+
+  &.aktivan {
+    border-color: var(--bakar);
+    color: var(--bakar);
+    background: rgba(194, 112, 61, 0.12);
+    font-weight: 600;
+
+    small {
+      color: var(--bakar);
+    }
+  }
+}
+
+.red {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(140px, 1fr)) auto;
+  gap: var(--r-3);
+  align-items: start;
+}
+
+.usko {
+  max-width: 200px;
+}
+
+.pregled-troska {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+
+  strong {
+    font-size: 22px;
+    color: var(--bakar);
+    font-variant-numeric: tabular-nums;
+  }
+
+  small {
+    font-size: 12px;
+    color: var(--tekst-3);
+    font-weight: 400;
+  }
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+  margin-bottom: var(--r-3);
+}
+
+.bonus {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-left: 3px solid transparent;
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+
+  &.vazi {
+    border-left-color: var(--uspeh);
+  }
+
+  &:not(.vazi) {
+    opacity: 0.6;
+  }
+}
+
+.iznos {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+
+  strong {
+    font-size: 20px;
+    color: var(--tekst);
+    font-variant-numeric: tabular-nums;
+  }
+
+  small {
+    font-size: 12px;
+    color: var(--tekst-3);
+  }
+}
+
+.ime {
+  margin: 0 0 2px;
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.podaci .meta {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .red {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .usko {
+    max-width: none;
+  }
+
+  .bonus {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--r-2);
+  }
+}

@@ -1,0 +1,186 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.filteri {
+  display: flex;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+
+  .polje {
+    min-width: 200px;
+  }
+}
+
+.forma {
+  margin-bottom: var(--r-4);
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--r-3);
+
+  &.cene {
+    grid-template-columns: 160px 160px 1fr;
+    align-items: end;
+  }
+}
+
+.pregled-cene {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 8px;
+
+  .oznaka {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tekst-3);
+  }
+
+  strong {
+    font-size: 22px;
+    color: var(--tekst);
+  }
+
+  small {
+    font-size: 12px;
+    color: var(--tekst-3);
+    font-weight: 400;
+  }
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+  margin-bottom: var(--r-3);
+}
+
+.jelo {
+  display: grid;
+  grid-template-columns: 64px 1fr auto 110px auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+
+  &.sklonjeno {
+    opacity: 0.55;
+  }
+
+  img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: var(--zaobljenje);
+    border: 1px solid var(--ivica);
+  }
+}
+
+.naziv {
+  margin: 0;
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.podaci .meta {
+  margin: 2px 0 0;
+}
+
+.cena {
+  display: flex;
+  align-items: baseline;
+  gap: var(--r-1);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  strong {
+    font-size: 16px;
+    color: var(--tekst);
+  }
+
+  .stara {
+    font-size: 13px;
+    color: var(--tekst-3);
+    text-decoration: line-through;
+  }
+
+  .popust {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--bakar);
+  }
+}
+
+.prekidac {
+  background: transparent;
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  color: var(--tekst-3);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    border-color: var(--bakar);
+    color: var(--tekst-2);
+  }
+
+  &.ukljucen {
+    border-color: var(--uspeh);
+    color: var(--uspeh);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+@media (max-width: 900px) {
+  .red,
+  .red.cene {
+    grid-template-columns: 1fr;
+  }
+
+  .jelo {
+    grid-template-columns: 64px 1fr auto;
+    row-gap: var(--r-2);
+  }
+
+  .jelo .akcije {
+    grid-column: 1 / -1;
+  }
+}

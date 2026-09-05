@@ -1,0 +1,150 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  margin-bottom: var(--r-3);
+}
+
+.filteri {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--r-4);
+  flex-wrap: wrap;
+
+  .polje {
+    min-width: 200px;
+  }
+}
+
+.prekidac-polje {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  font-size: 13px;
+  color: var(--tekst-2);
+  cursor: pointer;
+  padding-bottom: 10px;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--bakar);
+    cursor: pointer;
+  }
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+  margin-bottom: var(--r-3);
+}
+
+.recenzija {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-left: 3px solid transparent;
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+
+  &.bez-odgovora {
+    border-left-color: var(--u-toku);
+  }
+}
+
+.vrh {
+  display: flex;
+  align-items: baseline;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.ocena {
+  color: var(--bakar);
+  font-size: 15px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.tip {
+  font-size: 12px;
+  color: var(--tekst-2);
+}
+
+.naslov {
+  margin: 0;
+  font-size: 15px;
+  color: var(--tekst);
+  font-weight: 600;
+}
+
+.tekst {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tekst-2);
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+.odgovor {
+  padding: var(--r-2) var(--r-3);
+  border-left: 3px solid var(--bakar);
+  background: var(--povrsina-2);
+  border-radius: 0 var(--zaobljenje) var(--zaobljenje) 0;
+
+  p {
+    margin: 4px 0 0;
+    color: var(--tekst-2);
+    font-size: 13px;
+  }
+
+  .meta {
+    display: block;
+    margin-top: 4px;
+  }
+}
+
+.oznaka-odgovor {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bakar);
+  font-weight: 600;
+}
+
+.panel {
+  background: var(--povrsina-2);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+
+  &.opasan {
+    border-color: var(--greska);
+  }
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+
+  .napomena {
+    max-width: 56ch;
+  }
+}

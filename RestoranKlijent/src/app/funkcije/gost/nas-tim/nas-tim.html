@@ -1,0 +1,66 @@
+<section class="naslovna">
+  <div class="container">
+    <span class="eyebrow">Ljudi iza kuhinje</span>
+    <h1>Naš tim</h1>
+    <p>
+      Kuvari, konobari i šankeri koji svaki dan drže Ognjište. Bez njih bi ovo bila
+      samo prazna sala sa lepim stolovima.
+    </p>
+  </div>
+</section>
+
+<div class="container">
+  @if (ucitava()) {
+    <div class="grid">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  } @else if (greska()) {
+    <div class="poruka greska">
+      <h3>Greška</h3>
+      <p>{{ greska() }}</p>
+      <button type="button" class="btn-retry" (click)="ucitaj()">Pokušaj ponovo</button>
+    </div>
+  } @else if (prazno()) {
+    <div class="poruka">
+      <h3>Ekipa se još upoznaje sa sajtom</h3>
+      <p>Profili još nisu objavljeni. U kuhinji i sali su svakako — svakog dana od osam.</p>
+      <a routerLink="/kontakt" class="btn-link">Javite nam se</a>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (c of clanovi(); track c.ime + c.prezime) {
+        <article class="clan">
+          <div class="portret">
+            @if (c.slikaUrl) {
+              <img [src]="c.slikaUrl | slika" [alt]="c.ime + ' ' + c.prezime" loading="lazy" ogRezervna />
+            } @else {
+              <span class="inicijali" aria-hidden="true">{{ inicijali(c) }}</span>
+            }
+          </div>
+
+          <div class="telo">
+            <h3>{{ c.ime }} {{ c.prezime }}</h3>
+            <span class="uloga">{{ naziv(c.uloga) }}</span>
+
+            @if (c.biografija) {
+              <p class="biografija">{{ c.biografija }}</p>
+            }
+
+            @if (c.linkedInUrl || c.instagramUrl) {
+              <div class="mreze">
+                @if (c.linkedInUrl) {
+                  <a [href]="c.linkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                }
+                @if (c.instagramUrl) {
+                  <a [href]="c.instagramUrl" target="_blank" rel="noopener noreferrer">Instagram</a>
+                }
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

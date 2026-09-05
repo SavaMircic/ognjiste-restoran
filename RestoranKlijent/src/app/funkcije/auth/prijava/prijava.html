@@ -1,0 +1,41 @@
+<og-auth-okvir naslov="Prijava" podnaslov="Dobrodošli nazad u Ognjište.">
+  <form [formGroup]="forma" (ngSubmit)="posalji()" novalidate>
+    <label class="polje">
+      <span>Email <em>*</em></span>
+      <input type="email" formControlName="email" autocomplete="email" autofocus />
+      @if (forma.controls.email.touched && forma.controls.email.invalid) {
+        <small class="greska-polja">
+          {{ forma.controls.email.getError('server') ?? 'Unesite ispravnu email adresu.' }}
+        </small>
+      }
+    </label>
+
+    <label class="polje">
+      <span>Lozinka <em>*</em></span>
+      <input type="password" formControlName="lozinka" autocomplete="current-password" />
+      @if (forma.controls.lozinka.touched && forma.controls.lozinka.invalid) {
+        <small class="greska-polja">
+          {{ forma.controls.lozinka.getError('server') ?? 'Lozinka je obavezna.' }}
+        </small>
+      }
+    </label>
+
+    <a routerLink="/zaboravljena-lozinka" class="sporedna-veza">Zaboravili ste lozinku?</a>
+
+    @if (greska()) {
+      <p class="greska-opsta">{{ greska() }}</p>
+
+      @if (nijePotvrdjen()) {
+        <a routerLink="/posalji-ponovo-potvrdu" class="btn-outline">Pošalji nov link za potvrdu</a>
+      }
+    }
+
+    <button type="submit" class="btn" [disabled]="salje()">
+      {{ salje() ? 'Prijavljivanje…' : 'Prijavi se' }}
+    </button>
+  </form>
+
+  <p ispod class="ispod">
+    Nemate nalog? <a routerLink="/registracija">Registrujte se</a>
+  </p>
+</og-auth-okvir>

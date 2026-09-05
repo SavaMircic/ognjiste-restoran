@@ -1,0 +1,173 @@
+<div class="alatka">
+  <label class="polje">
+    <span>Zaposleni</span>
+    <select [value]="filterZaposleni() ?? ''" (change)="filtriraj($any($event.target).value)">
+      <option value="">Svi zaposleni</option>
+      @for (z of zaposleni(); track z.id) {
+        <option [value]="z.id">{{ z.ime }} {{ z.prezime }}</option>
+      }
+    </select>
+  </label>
+
+  @if (!dodeljujem()) {
+    <button type="button" class="btn" (click)="zapocni()">Dodeli bonus</button>
+  }
+</div>
+
+@if (dodeljujem()) {
+  <form class="kartica forma" [formGroup]="forma" (ngSubmit)="dodeli()">
+    <h2>Dodela bonusa</h2>
+
+    @if (greskaForme()) {
+      <p class="greska-opsta">{{ greskaForme() }}</p>
+    }
+
+    <div class="primaoci">
+      <div class="zaglavlje-primalaca">
+        <span class="oznaka-polja">
+          Primaoci <em>*</em>
+          @if (izabrani().length) {
+            <span class="brojac">{{ izabrani().length }} izabrano</span>
+          }
+        </span>
+
+        <div class="brzi">
+          <button type="button" (click)="izaberiSve()">Izaberi sve</button>
+          <button type="button" (click)="ponistiIzbor()">Poništi</button>
+        </div>
+      </div>
+
+      @if (zaposleni().length) {
+        <div class="cipovi">
+          @for (z of zaposleni(); track z.id) {
+            <button
+              type="button"
+              class="cip"
+              [class.aktivan]="jeIzabran(z.id)"
+              [attr.aria-pressed]="jeIzabran(z.id)"
+              (click)="prebaciPrimaoca(z.id)"
+            >
+              {{ z.ime }} {{ z.prezime }}
+              <small>{{ nazivUloge(z.uloga) }}</small>
+            </button>
+          }
+        </div>
+
+        <p class="meta">Najviše {{ maksPrimalaca }} zaposlenih odjednom.</p>
+      } @else {
+        <p class="napomena">Spisak zaposlenih nije učitan — osvežite stranicu.</p>
+      }
+    </div>
+
+    <div class="red">
+      <label class="polje usko">
+        <span>Iznos po osobi (RSD) <em>*</em></span>
+        <input type="number" formControlName="iznos" min="1" step="100" />
+        @if (forma.controls.iznos.touched && forma.controls.iznos.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.iznos.getError('server') ?? 'Iznos mora biti veći od nule.' }}
+          </span>
+        }
+      </label>
+
+      <label class="polje usko">
+        <span>Važi od <em>*</em></span>
+        <input type="date" formControlName="datumPocetka" />
+        @if (forma.controls.datumPocetka.touched && forma.controls.datumPocetka.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.datumPocetka.getError('server') ?? 'Datum je obavezan.' }}
+          </span>
+        }
+      </label>
+
+      <label class="polje usko">
+        <span>Važi do <em>*</em></span>
+        <input type="date" formControlName="datumKraja" />
+        @if (forma.controls.datumKraja.touched && forma.controls.datumKraja.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.datumKraja.getError('server') ?? 'Ne može biti pre datuma početka.' }}
+          </span>
+        }
+      </label>
+
+      <div class="pregled-troska">
+        <span class="oznaka-polja">Ukupno se isplaćuje</span>
+        <strong>{{ ukupanTrosak() | number: '1.0-0' }} <small>RSD</small></strong>
+      </div>
+    </div>
+
+    <label class="polje">
+      <span>Razlog <em>*</em></span>
+      <input
+        type="text"
+        formControlName="razlog"
+        maxlength="500"
+        placeholder="npr. rekordan promet u avgustu"
+      />
+      <span class="meta">Zaposleni ga vidi na svom ekranu „Bonusi".</span>
+      @if (forma.controls.razlog.touched && forma.controls.razlog.invalid) {
+        <span class="greska-polja">
+          {{ forma.controls.razlog.getError('server') ?? 'Razlog je obavezan.' }}
+        </span>
+      }
+    </label>
+
+    <div class="akcije">
+      <button type="submit" class="btn" [disabled]="salje()">
+        {{ salje() ? 'Dodeljuje se…' : 'Dodeli' }}
+      </button>
+      <button type="button" class="btn-outline" (click)="odustani()">Odustani</button>
+    </div>
+  </form>
+}
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema dodeljenih bonusa</h3>
+    <p>Za izabrani filter nema nijednog zapisa.</p>
+  </div>
+} @else {
+  <p class="meta broj-zapisa">
+    Ukupno {{ ukupnoZapisa() }} bonusa · {{ aktivnih() }} trenutno važi na ovoj strani
+  </p>
+
+  <div class="lista">
+    @for (b of bonusi(); track b.id) {
+      <article class="bonus" [class.vazi]="b.vazi">
+        <div class="iznos">
+          <strong>{{ b.iznos | number: '1.0-0' }}</strong>
+          <small>RSD</small>
+        </div>
+
+        <div class="podaci">
+          <p class="ime">{{ b.imeZaposlenog }}</p>
+          <p class="meta">{{ b.razlog }}</p>
+          <p class="meta">
+            {{ b.datumPocetka | datumS: 'd.M.yyyy.' }} – {{ b.datumKraja | datumS: 'd.M.yyyy.' }}
+            · dodelio/la {{ b.dodelioIme }}, {{ b.datumDodele | datumS: 'd.M.yyyy.' }}
+          </p>
+        </div>
+
+        <span class="status" [class]="b.vazi ? 'status resena' : 'status'">
+          {{ b.vazi ? 'Važi' : 'Istekao' }}
+        </span>
+      </article>
+    }
+  </div>
+
+  @if (ukupnoStrana() > 1) {
+    <og-paginacija
+      [strana]="strana()"
+      [ukupnoStrana]="ukupnoStrana()"
+      (promena)="naStranu($event)"
+    />
+  }
+}

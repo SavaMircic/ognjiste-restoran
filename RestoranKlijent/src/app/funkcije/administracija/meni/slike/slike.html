@@ -1,0 +1,127 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <a routerLink="/administracija/meni" class="btn-outline">Nazad na jela</a>
+  </div>
+} @else if (jelo(); as j) {
+  <div class="zaglavlje">
+    <div>
+      <a routerLink="/administracija/meni" class="nazad">‹ Jela</a>
+      <h1>{{ j.naziv }}</h1>
+      <p class="meta">{{ j.kategorijaNaziv }}</p>
+    </div>
+  </div>
+
+  <section class="celina">
+    <h2>Glavna slika</h2>
+
+    <div class="glavna">
+      <img [src]="j.slikaUrl | slika" [alt]="j.naziv" ogRezervna width="240" height="180" />
+
+      <div class="uz-sliku">
+        <p class="napomena">
+          Ovo je slika koju gost vidi u meniju i na vrhu strane jela. Postavljanjem nove
+          stara se briše sa diska — nema verzija, nema povratka.
+        </p>
+
+        <label class="btn btn-file">
+          {{ saljeGlavnu() ? 'Otprema se…' : 'Izaberi novu sliku' }}
+          <input
+            type="file"
+            accept=".jpg,.jpeg,.png,.webp"
+            [disabled]="saljeGlavnu()"
+            (change)="postaviGlavnu($event)"
+          />
+        </label>
+
+        <p class="meta">Najviše 2 MB · .jpg, .jpeg, .png ili .webp</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="celina">
+    <h2>Galerija jela ({{ dodatne().length }}/{{ maksDodatnih }})</h2>
+
+    <div class="dodavanje">
+      <label class="polje">
+        <span>Opis sličice (za čitače ekrana)</span>
+        <input
+          type="text"
+          maxlength="300"
+          placeholder="npr. jelo posluženo sa prilogom"
+          [value]="opisNove()"
+          (input)="opisNove.set($any($event.target).value)"
+          [disabled]="popunjeno()"
+        />
+      </label>
+
+      @if (popunjeno()) {
+        <p class="napomena">
+          Galerija je puna. Obrišite neku sličicu da biste dodali novu.
+        </p>
+      } @else {
+        <label class="btn btn-file">
+          {{ saljeDodatnu() ? 'Otprema se…' : 'Dodaj sličicu' }}
+          <input
+            type="file"
+            accept=".jpg,.jpeg,.png,.webp"
+            [disabled]="saljeDodatnu()"
+            (change)="dodajDodatnu($event)"
+          />
+        </label>
+      }
+    </div>
+
+    @if (dodatne().length) {
+      <div class="grid">
+        @for (s of dodatne(); track s.id; let i = $index) {
+          <figure class="slicica">
+            <img [src]="s.slikaUrl | slika" [alt]="s.opis ?? ''" ogRezervna width="160" height="120" />
+
+            <figcaption>
+              <span class="meta">{{ s.opis || 'bez opisa' }}</span>
+
+              <div class="alatke">
+                <button
+                  type="button"
+                  class="korak"
+                  aria-label="Pomeri levo"
+                  [disabled]="i === 0 || menjaRedosled()"
+                  (click)="pomeri(i, -1)"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  class="korak"
+                  aria-label="Pomeri desno"
+                  [disabled]="i === dodatne().length - 1 || menjaRedosled()"
+                  (click)="pomeri(i, 1)"
+                >
+                  ›
+                </button>
+                <button
+                  type="button"
+                  class="korak izbaci"
+                  aria-label="Obriši sličicu"
+                  [disabled]="brisem() === s.id"
+                  (click)="obrisiDodatnu(s)"
+                >
+                  ×
+                </button>
+              </div>
+            </figcaption>
+          </figure>
+        }
+      </div>
+    } @else {
+      <p class="napomena">
+        Jelo još nema dodatnih slika. Glavna slika je dovoljna — galerija je za detalje
+        (prilog, sastojak, sto na kom se služi).
+      </p>
+    }
+  </section>
+}

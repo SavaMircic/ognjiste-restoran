@@ -1,0 +1,28 @@
+.prazno {
+  text-align: center;
+  padding: var(--r-6) var(--r-3);
+
+  h1 {
+    font-size: clamp(28px, 5vw, 40px);
+    margin: var(--r-2) 0;
+  }
+
+  p {
+    color: var(--tekst-3);
+    margin-bottom: var(--r-4);
+  }
+}
+
+.btn {
+  display: inline-block;
+  background: var(--bakar);
+  color: var(--pozadina);
+  padding: 11px 24px;
+  border-radius: var(--zaobljenje);
+  font-weight: 700;
+
+  &:hover {
+    text-decoration: none;
+    filter: brightness(1.08);
+  }
+}

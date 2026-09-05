@@ -1,0 +1,129 @@
+@use '../../../styles/forma' as f;
+
+@mixin nalog {
+  @include f.polja;
+
+  .kartica {
+    background: var(--povrsina);
+    border: 1px solid var(--ivica);
+    border-radius: var(--zaobljenje-veliko);
+    padding: var(--r-4);
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 var(--r-3);
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--r-3);
+  }
+
+  .btn {
+    @include f.btn-form;
+    width: auto;
+    align-self: flex-start;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--zlato);
+    border: 1px solid var(--zlato);
+    border-radius: var(--zaobljenje);
+    padding: 9px 18px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: none;
+      background: rgba(212, 175, 106, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+  }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--greska);
+    border: 1px solid var(--greska);
+    border-radius: var(--zaobljenje);
+    padding: 9px 18px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    &:hover {
+      background: rgba(224, 96, 90, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+  }
+
+  .napomena {
+    font-size: 12px;
+    color: var(--tekst-3);
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--tekst-3);
+  }
+
+  .poruka {
+    text-align: center;
+    padding: var(--r-6) var(--r-3);
+    background: var(--povrsina);
+    border: 1px solid var(--ivica);
+    border-radius: var(--zaobljenje-veliko);
+
+    h3 {
+      margin: 0 0 var(--r-2);
+    }
+
+    p {
+      color: var(--tekst-3);
+      margin: 0 0 var(--r-3);
+    }
+
+    &.greska h3 {
+      color: var(--greska);
+    }
+  }
+
+  .skeleton {
+    height: 320px;
+    border-radius: var(--zaobljenje-veliko);
+    border: 1px solid var(--ivica);
+    background: linear-gradient(90deg, var(--povrsina) 25%, var(--povrsina-2) 50%, var(--povrsina) 75%);
+    background-size: 200% 100%;
+    animation: talas 1.4s ease-in-out infinite;
+  }
+
+  @keyframes talas {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton {
+      animation: none;
+    }
+  }
+}

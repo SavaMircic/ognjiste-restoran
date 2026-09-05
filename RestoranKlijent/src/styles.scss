@@ -1,0 +1,135 @@
+@use '@angular/material' as mat;
+@use './styles/theme-colors' as tema;
+@use './styles/tokens';
+
+html {
+  height: 100%;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: tema.$primary-palette,
+        tertiary: tema.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+:root {
+  color-scheme: dark;
+
+  --mat-sys-surface: var(--pozadina);
+  --mat-sys-surface-container-lowest: var(--pozadina);
+  --mat-sys-surface-container-low: var(--povrsina);
+  --mat-sys-surface-container: var(--povrsina);
+  --mat-sys-surface-container-high: var(--povrsina-2);
+  --mat-sys-surface-container-highest: var(--povrsina-2);
+
+  --mat-sys-on-surface: var(--tekst);
+  --mat-sys-on-surface-variant: var(--tekst-2);
+  --mat-sys-outline: var(--ivica);
+  --mat-sys-outline-variant: var(--ivica);
+
+  --mat-sys-primary: var(--bakar);
+  --mat-sys-on-primary: var(--pozadina);
+  --mat-sys-tertiary: var(--zlato);
+  --mat-sys-on-tertiary: var(--pozadina);
+  --mat-sys-error: var(--greska);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--pozadina);
+  color: var(--tekst);
+  font-family: var(--pismo-telo);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--pismo-naslov);
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0;
+}
+
+a {
+  color: var(--bakar);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--zlato);
+  outline-offset: 2px;
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--r-3);
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--zlato);
+  font-family: var(--pismo-telo);
+}
+
+.mat-mdc-snack-bar-container {
+  &.obavestenje-uspeh .mdc-snackbar__surface {
+    border-left: 4px solid var(--uspeh);
+  }
+
+  &.obavestenje-greska .mdc-snackbar__surface {
+    border-left: 4px solid var(--greska);
+  }
+
+  &.obavestenje-info .mdc-snackbar__surface {
+    border-left: 4px solid var(--u-toku);
+  }
+
+  .mdc-snackbar__surface {
+    background: var(--povrsina-2) !important;
+    border: 1px solid var(--ivica);
+    border-left-width: 4px;
+  }
+
+  .mdc-snackbar__label {
+    color: var(--tekst) !important;
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: var(--bakar) !important;
+  }
+}
+
+.btn-link {
+  @include tokens.dugme-osnova(44px, 22px);
+
+  align-self: flex-start;
+  background: var(--bakar);
+  color: var(--pozadina);
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+    filter: brightness(1.08);
+  }
+}

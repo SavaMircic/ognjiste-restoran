@@ -1,0 +1,283 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <a routerLink="/konobar/stolovi" class="btn-outline">Nazad na stolove</a>
+  </div>
+} @else if (porudzbina(); as p) {
+  <div class="zaglavlje">
+    <div class="ko-sto">
+      <a routerLink="/konobar/stolovi" class="nazad">‹ Stolovi</a>
+      <h1>Sto {{ p.brojStola }}</h1>
+      <p class="meta">
+        Otvoreno {{ p.vremeOtvaranja | datumS: 'HH:mm' }} · {{ p.konobarIme }}
+        @if (zatvorena()) {
+          · zatvoreno {{ p.vremeZatvaranja | datumS: 'HH:mm' }}
+        }
+      </p>
+    </div>
+
+    <div class="racun-zbir">
+      <span class="oznaka">{{ zatvorena() ? 'Naplaćeno' : 'Za naplatu' }}</span>
+      <strong>{{ ukupno() | number: '1.0-2' }} <small>RSD</small></strong>
+      @if (p.iznosNapojnice) {
+        <span class="meta">+ {{ p.iznosNapojnice | number: '1.0-2' }} napojnice</span>
+      }
+    </div>
+  </div>
+
+  @if (zatvorena()) {
+    <div class="poruka">
+      <h3>Sto je zatvoren</h3>
+      <p>
+        Plaćeno: {{ p.nacinPlacanja === 'Kartica' ? 'karticom' : 'gotovinom' }}.
+        Račun je generisan i može se preuzeti.
+      </p>
+      <div class="akcije sredina">
+        <button type="button" class="btn" (click)="preuzmiRacun()">Preuzmi račun (.txt)</button>
+        <a routerLink="/konobar/stolovi" class="btn-outline">Nazad na stolove</a>
+      </div>
+    </div>
+
+    <h2>Stavke</h2>
+    <div class="lista">
+      @for (s of p.stavke; track s.id) {
+        <div class="stavka">
+          <span class="kolicina">{{ s.kolicina }}×</span>
+          <span class="naziv">{{ s.nazivStavke }}</span>
+          <span class="cena">{{ s.cenaUTrenutkuNarudzbine * s.kolicina | number: '1.0-2' }}</span>
+        </div>
+      }
+    </div>
+  } @else {
+
+    @if (zaOdnosenje().length) {
+      <h2>Spremno — odnesi gostu</h2>
+      <div class="lista">
+        @for (s of zaOdnosenje(); track s.id) {
+          <div class="stavka spremna">
+            <span class="kolicina">{{ s.kolicina }}×</span>
+            <span class="naziv">
+              {{ s.nazivStavke }}
+              @if (s.napomena) {
+                <em class="napomena-stavke">{{ s.napomena }}</em>
+              }
+            </span>
+            <span class="meta">gotovo {{ s.vremeZavrsetka | datumS: 'HH:mm' }}</span>
+            <button
+              type="button"
+              class="btn-outline"
+              [disabled]="uToku() === s.id"
+              (click)="isporuci(s)"
+            >
+              Odneto
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    @if (uPripremi().length) {
+      <h2>U pripremi</h2>
+      <div class="lista">
+        @for (s of uPripremi(); track s.id) {
+          <div class="stavka u-pripremi">
+            <span class="kolicina">{{ s.kolicina }}×</span>
+            <span class="naziv">
+              {{ s.nazivStavke }}
+              @if (s.napomena) {
+                <em class="napomena-stavke">{{ s.napomena }}</em>
+              }
+            </span>
+            <span class="meta">preuzeto {{ s.vremePreuzimanja | datumS: 'HH:mm' }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    @if (poslate().length) {
+      <h2>Poslato — čeka preuzimanje</h2>
+      <div class="lista">
+        @for (s of poslate(); track s.id) {
+          <div class="stavka">
+            <span class="kolicina">{{ s.kolicina }}×</span>
+            <span class="naziv">
+              {{ s.nazivStavke }}
+              @if (s.napomena) {
+                <em class="napomena-stavke">{{ s.napomena }}</em>
+              }
+            </span>
+            <span class="meta">{{ s.vremeSlanja | datumS: 'HH:mm' }}</span>
+            <button
+              type="button"
+              class="btn-outline danger"
+              [disabled]="uToku() === s.id"
+              (click)="otkazi(s)"
+            >
+              Otkaži
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    @if (odnete().length) {
+      <h2>Odneto gostu</h2>
+      <div class="lista">
+        @for (s of odnete(); track s.id) {
+          <div class="stavka odneta">
+            <span class="kolicina">{{ s.kolicina }}×</span>
+            <span class="naziv">{{ s.nazivStavke }}</span>
+            <span class="cena">{{ s.cenaUTrenutkuNarudzbine * s.kolicina | number: '1.0-2' }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    @if (!p.stavke.length) {
+      <div class="poruka">
+        <h3>Sto je prazan</h3>
+        <p>Dodajte prvu rundu iz menija ispod.</p>
+      </div>
+    }
+
+    <section class="dodavanje">
+      <h2>Dodaj u porudžbinu</h2>
+
+      @if (meniUcitava()) {
+        <p class="napomena">Meni se učitava…</p>
+      } @else {
+        <div class="filteri">
+          <input
+            type="search"
+            class="pretraga"
+            placeholder="Pretraga jela i pića"
+            [value]="pretraga()"
+            (input)="pretraga.set($any($event.target).value)"
+            aria-label="Pretraga menija"
+          />
+
+          <div class="cipovi">
+            <button
+              type="button"
+              class="cip"
+              [class.aktivan]="izabranaKategorija() === null"
+              (click)="izaberiKategoriju(null)"
+            >
+              Sve
+            </button>
+            @for (k of kategorije(); track k.id) {
+              <button
+                type="button"
+                class="cip"
+                [class.aktivan]="izabranaKategorija() === k.id"
+                (click)="izaberiKategoriju(k.id)"
+              >
+                {{ k.naziv }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="jela">
+          @for (j of filtriranaJela(); track j.id) {
+            <button type="button" class="jelo" (click)="dodajUKorpu(j)">
+              <span class="naziv">{{ j.naziv }}</span>
+              <span class="cena">{{ j.cenaSaPopustom | number: '1.0-2' }}</span>
+            </button>
+          } @empty {
+            <p class="napomena">Nema jela za ovaj filter.</p>
+          }
+        </div>
+      }
+
+      @if (korpa().length) {
+        <div class="korpa">
+          <h2>Za slanje</h2>
+
+          @for (r of korpa(); track $index) {
+            <div class="red-korpe">
+              <div class="kolicina-kontrole">
+                <button type="button" class="korak" (click)="promeniKolicinu($index, -1)" aria-label="Manje">−</button>
+                <span class="broj">{{ r.kolicina }}</span>
+                <button type="button" class="korak" (click)="promeniKolicinu($index, 1)" aria-label="Više">+</button>
+              </div>
+
+              <span class="naziv">{{ r.naziv }}</span>
+
+              <input
+                type="text"
+                class="napomena-unos"
+                placeholder="Napomena (npr. bez luka)"
+                [value]="r.napomena ?? ''"
+                (change)="postaviNapomenu($index, $any($event.target).value)"
+              />
+
+              <span class="cena">{{ r.cena * r.kolicina | number: '1.0-2' }}</span>
+              <button type="button" class="korak izbaci" (click)="izbaci($index)" aria-label="Izbaci">×</button>
+            </div>
+          }
+
+          <div class="akcije">
+            <button type="button" class="btn" [disabled]="salje()" (click)="posalji()">
+              {{ salje() ? 'Šalje se…' : 'Pošalji (' + (ukupnoKorpa() | number: '1.0-2') + ' RSD)' }}
+            </button>
+            <span class="napomena">
+              Jela idu u kuhinju, pića na šank — razvrstava se po kategoriji, automatski.
+            </span>
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="zatvaranje">
+      <h2>Zatvaranje stola</h2>
+
+      @if (!moguceZatvoriti()) {
+        <p class="napomena">
+          Sto se zatvara tek kad su sve stavke spremne. Trenutno se čeka
+          {{ poslate().length + uPripremi().length }} stavki iz kuhinje i sa šanka.
+        </p>
+      } @else if (!p.stavke.length) {
+        <p class="napomena">Prazan sto se ne može zatvoriti — porudžbina nema nijednu stavku.</p>
+      } @else {
+        <div class="zatvaranje-forma">
+          <div class="polje">
+            <span class="oznaka-polja">Način plaćanja</span>
+            <div class="cipovi">
+              @for (n of naciniPlacanja; track n) {
+                <button
+                  type="button"
+                  class="cip"
+                  [class.aktivan]="nacinPlacanja() === n"
+                  (click)="nacinPlacanja.set(n)"
+                >
+                  {{ n }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="polje">
+            <label for="napojnica" class="oznaka-polja">Napojnica (RSD)</label>
+            <input
+              id="napojnica"
+              type="number"
+              min="0"
+              step="10"
+              placeholder="0"
+              [value]="napojnica() ?? ''"
+              (input)="napojnica.set($any($event.target).valueAsNumber || null)"
+            />
+          </div>
+
+          <button type="button" class="btn" [disabled]="zatvara()" (click)="zatvori()">
+            {{ zatvara() ? 'Zatvaranje…' : 'Zatvori i naplati' }}
+          </button>
+        </div>
+      }
+    </section>
+  }
+}

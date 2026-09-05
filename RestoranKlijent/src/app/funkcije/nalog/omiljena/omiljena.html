@@ -1,0 +1,35 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nemate omiljenih jela</h3>
+    <p>Kliknite ♥ na jelu i naći ćete ga ovde sledeći put.</p>
+    <a routerLink="/meni" class="btn-link">Otvori meni</a>
+  </div>
+} @else {
+  <p class="sazetak">{{ jela().length }} u listi</p>
+
+  <div class="grid">
+    @for (j of jela(); track j.id) {
+      <div class="container-kartice">
+        <og-kartica-jela [jelo]="j" />
+
+        <button
+          type="button"
+          class="ukloni"
+          [disabled]="uklanjaId() === j.id"
+          [attr.aria-label]="'Ukloni ' + j.naziv + ' iz omiljenih'"
+          (click)="ukloni(j)"
+        >
+          ♥
+        </button>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,70 @@
+<section class="naslovna">
+  <div class="container">
+    <span class="eyebrow">Šta kažu gosti</span>
+    <h1>Recenzije</h1>
+    <p>
+      Ocene i utisci naših gostiju — o pojedinačnim jelima, o usluzi i o samom restoranu.
+      Na neke od njih smo i odgovorili.
+    </p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="filteri">
+    <div class="tipovi" role="tablist" aria-label="Tip recenzije">
+      @for (t of tipovi; track t.naziv) {
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="tip() === t.vrednost"
+          [class.aktivna]="tip() === t.vrednost"
+          (click)="izaberiTip(t.vrednost)"
+        >
+          {{ t.naziv }}
+        </button>
+      }
+    </div>
+
+    <label class="sortiranje">
+      <span>Poređaj</span>
+      <select [value]="sortiranje()" (change)="promeniSortiranje($event)">
+        <option value="">Najnovije</option>
+        <option value="najbolje-ocenjeno">Najbolje ocenjeno</option>
+      </select>
+    </label>
+  </div>
+
+  @if (ucitava()) {
+    <div class="lista">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  } @else if (greska()) {
+    <div class="poruka greska">
+      <h3>Greška</h3>
+      <p>{{ greska() }}</p>
+      <button type="button" class="btn-retry" (click)="ucitaj()">Pokušaj ponovo</button>
+    </div>
+  } @else if (prazno()) {
+    <div class="poruka">
+      <h3>Ovde još nema nijedne recenzije</h3>
+      <p>Ocenu ostavljaju gosti koji su bili kod nas. Ako ste bili, vaša je prva.</p>
+      <a routerLink="/meni" class="btn-link">Pogledaj meni</a>
+    </div>
+  } @else {
+    <p class="ukupno">{{ oznakaUkupno() }}</p>
+
+    <div class="lista">
+      @for (r of recenzije(); track r.id) {
+        <og-kartica-recenzije [recenzija]="r" />
+      }
+    </div>
+
+    <og-paginacija
+      [strana]="strana()"
+      [ukupnoStrana]="ukupnoStrana()"
+      (promena)="promeniStranu($event)"
+    />
+  }
+</div>

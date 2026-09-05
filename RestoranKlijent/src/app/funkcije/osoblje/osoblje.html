@@ -1,0 +1,22 @@
+<div class="traka">
+  <div class="container content">
+    <div class="ko">
+      <strong>{{ auth.punoIme() }}</strong>
+      <span class="uloga">{{ mojeUloge() }}</span>
+    </div>
+
+    <nav class="kartice" aria-label="Radni deo">
+      @for (k of kartice(); track k.putanja) {
+        <a [routerLink]="k.putanja" routerLinkActive="aktivna">{{ k.naziv }}</a>
+      }
+
+      @for (a of alati(); track a.putanja) {
+        <a [routerLink]="a.putanja" class="alat">{{ a.naziv }} →</a>
+      }
+    </nav>
+  </div>
+</div>
+
+<div class="container page-content">
+  <router-outlet />
+</div>

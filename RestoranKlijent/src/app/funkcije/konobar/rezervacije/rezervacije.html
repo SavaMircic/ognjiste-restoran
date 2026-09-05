@@ -1,0 +1,105 @@
+<div class="alatka">
+  <p class="napomena">
+    Rezervacije za današnji dan. „Gost je stigao" istovremeno otvara sto i porudžbinu —
+    posle toga sto ne treba otvarati ručno. Ako je sto već otvoren sa table, gost se upisuje
+    na tu porudžbinu, pa dolazak može da se prijavi i tada. Ako račun na tom stolu pripada
+    prethodnoj rezervaciji, prvo ga zatvorite preko „Otvori račun".
+  </p>
+
+  <button type="button" class="btn-outline" (click)="ucitaj()" [disabled]="ucitava()">Osveži</button>
+</div>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Danas nema rezervacija</h3>
+    <p>Stolovi se popunjavaju sa table — gost bez rezervacije se prima direktno.</p>
+  </div>
+} @else {
+  @if (ocekivani().length) {
+    <h2>Očekuje se ({{ ocekivani().length }})</h2>
+    <div class="lista">
+      @for (x of ocekivani(); track x.r.id) {
+        <article class="rezervacija" [class.kasni]="x.kasni">
+          <div class="vreme">
+            <strong>{{ x.r.datumVreme | datumS: 'HH:mm' }}</strong>
+            @if (x.kasni) {
+              <span class="oznaka-kasni">kasni</span>
+            } @else {
+              <span class="meta">do {{ x.r.tolerancijaDo | datumS: 'HH:mm' }}</span>
+            }
+          </div>
+
+          <div class="podaci">
+            <p class="ime">{{ x.r.imeZaPrikaz }}</p>
+            <p class="meta">
+              Sto {{ x.r.brojStola }} · {{ gosti(x.r.brojGostiju) }}
+              · kod <code>{{ x.r.kodRezervacije }}</code>
+            </p>
+            @if (x.tudjRacun) {
+              <p class="oznaka-tudj">
+                Na stolu je otvoren račun prethodnog gosta — zatvorite ga, pa prijavite dolazak.
+              </p>
+            } @else if (x.stoOtvoren) {
+              <p class="oznaka-otvoren">Sto je već otvoren — gost se upisuje na tu porudžbinu.</p>
+            }
+          </div>
+
+          <div class="akcije">
+            <button
+              type="button"
+              class="btn"
+              [disabled]="uToku() === x.r.id"
+              (click)="prijaviDolazak(x.r)"
+            >
+              Gost je stigao
+            </button>
+            <button
+              type="button"
+              class="btn-outline"
+              [disabled]="uToku() === x.r.id"
+              (click)="oznaciIsteklom(x.r)"
+            >
+              Nije došao
+            </button>
+
+            @if (x.stoOtvoren && x.porudzbinaId !== null) {
+              <button type="button" class="veza-racun" (click)="otvoriRacun(x.porudzbinaId)">
+                Otvori račun stola {{ x.r.brojStola }} →
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  @if (obradjeni().length) {
+    <h2>Rešeno danas</h2>
+    <div class="lista">
+      @for (x of obradjeni(); track x.r.id) {
+        <article class="rezervacija zavrsena">
+          <div class="vreme">
+            <strong>{{ x.r.datumVreme | datumS: 'HH:mm' }}</strong>
+          </div>
+
+          <div class="podaci">
+            <p class="ime">{{ x.r.imeZaPrikaz }}</p>
+            <p class="meta">Sto {{ x.r.brojStola }} · kod <code>{{ x.r.kodRezervacije }}</code></p>
+          </div>
+
+          <span class="status" [class]="'status ' + klasaStatusa[x.r.status]">
+            {{ nazivStatusa[x.r.status] }}
+          </span>
+        </article>
+      }
+    </div>
+  }
+}

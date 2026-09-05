@@ -1,0 +1,204 @@
+<div class="alatka">
+  <div class="navigacija">
+    <button type="button" class="btn-outline" (click)="prethodna()" aria-label="Prethodna nedelja">‹</button>
+
+    <span class="period">
+      {{ pocetak() | date: 'd. MMM' }} – {{ kraj() | date: 'd. MMM yyyy.' }}
+    </span>
+
+    <button type="button" class="btn-outline" (click)="sledeca()" aria-label="Sledeća nedelja">›</button>
+
+    @if (!jeTekuca()) {
+      <button type="button" class="btn-outline" (click)="naTekucu()">Tekuća nedelja</button>
+    }
+  </div>
+
+  @if (!ucitava() && !greska()) {
+    <span class="zbir">
+      {{ saBrojem(ukupnoSmena(), 'smena', 'smene', 'smena') }} ·
+      <strong>{{ ukupnoSati() }}</strong> h ukupno
+    </span>
+  }
+</div>
+
+@if (otvorena()) {
+  <form class="kartica forma" [formGroup]="forma" (ngSubmit)="sacuvaj()">
+    <h2>{{ uredjujem() ? 'Izmena smene' : 'Nova smena' }}</h2>
+
+    @if (greskaForme()) {
+      <p class="greska-opsta">{{ greskaForme() }}</p>
+    }
+
+    <div class="red">
+      <label class="polje">
+        <span>Zaposleni <em>*</em></span>
+        <select formControlName="zaposleniId">
+          <option [value]="0" disabled>Izaberite zaposlenog</option>
+          @for (z of zaposleni(); track z.id) {
+            <option [value]="z.id">{{ z.ime }} {{ z.prezime }} — {{ nazivUloge(z.uloga) }}</option>
+          }
+        </select>
+        @if (uredjujem()) {
+          <span class="meta">Smena se ne premešta na drugog — uklonite je i dodajte novu.</span>
+        }
+      </label>
+
+      <label class="polje usko">
+        <span>Datum <em>*</em></span>
+        <input type="date" formControlName="datum" />
+        @if (forma.controls.datum.touched && forma.controls.datum.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.datum.getError('server') ?? 'Datum je obavezan.' }}
+          </span>
+        }
+      </label>
+
+      <label class="polje usko">
+        <span>Od <em>*</em></span>
+        <input type="time" formControlName="vremePocetka" />
+      </label>
+
+      <label class="polje usko">
+        <span>Do <em>*</em></span>
+        <input type="time" formControlName="vremeKraja" />
+        @if (forma.controls.vremeKraja.touched && forma.controls.vremeKraja.getError('server')) {
+          <span class="greska-polja">{{ forma.controls.vremeKraja.getError('server') }}</span>
+        }
+      </label>
+
+      @if (trajanje(); as t) {
+        <div class="pregled-trajanja">
+          <span class="oznaka-polja">Trajanje</span>
+          <strong>{{ t.sati }} <small>h</small></strong>
+          @if (t.prelaziPonoc) {
+            <small class="ponoc">završava se sutradan</small>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="termini">
+      <span class="oznaka-polja">Tipski termin</span>
+      @for (t of termini; track t.naziv) {
+        <button type="button" class="cip" (click)="postaviTermin(t.od, t.do)">
+          {{ t.naziv }} <small>{{ t.od }}–{{ t.do }}</small>
+        </button>
+      }
+    </div>
+
+    <div class="akcije">
+      <button type="submit" class="btn" [disabled]="salje()">
+        {{ salje() ? 'Čuva se…' : uredjujem() ? 'Sačuvaj izmenu' : 'Dodaj smenu' }}
+      </button>
+      <button type="button" class="btn-outline" (click)="zatvori()">Odustani</button>
+
+      @if (uredjujem(); as s) {
+        @if (zapoceta(s)) {
+          <span class="meta">Smena je već počela i ne može se ukloniti — može samo izmena.</span>
+        } @else {
+          <button type="button" class="btn-outline danger" [disabled]="brisem()" (click)="ukloni()">
+            {{ brisem() ? 'Uklanja se…' : 'Ukloni smenu' }}
+          </button>
+        }
+      }
+    </div>
+  </form>
+}
+
+@if (spisakPao()) {
+  <p class="greska-opsta">
+    Spisak zaposlenih nije učitan, pa se nove smene ne mogu dodavati. Postojeći raspored
+    se i dalje vidi i menja — osvežite stranicu da se spisak ponovo povuče.
+  </p>
+}
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema nijednog zaposlenog</h3>
+    <p>Naloge osoblja otvara administrator — bez njih se raspored ne može praviti.</p>
+  </div>
+} @else {
+  <div class="grid-okvir">
+    <div class="grid">
+      <div class="ugao">Zaposleni</div>
+
+      @for (d of dani(); track d.datum) {
+        <div class="zaglavlje-dana" [class.danas]="d.jeDanas">
+          <strong>{{ d.kratko }}</strong>
+          <span class="datum">{{ d.datum | datumS: 'd.M.' }}</span>
+          <span class="pokrivenost" [class.rupa]="d.brojSmena === 0">
+            {{ saBrojem(d.brojSmena, 'smena', 'smene', 'smena') }}
+          </span>
+        </div>
+      }
+
+      <div class="ugao sati-zaglavlje">Sati</div>
+
+      @for (r of redovi(); track r.zaposleniId) {
+        <div class="ime-red" [class.neaktivan]="!r.aktivan && !spisakPao()">
+          <strong>{{ r.ime }}</strong>
+          @if (r.uloga) {
+            <span class="uloga-red">{{ nazivUloge(r.uloga) }}</span>
+          } @else if (!spisakPao()) {
+            <span class="uloga-red">deaktiviran</span>
+          }
+        </div>
+
+        @for (c of r.celije; track c.dan.datum) {
+          <div class="celija" [class.danas]="c.dan.jeDanas">
+            @for (s of c.smene; track s.id) {
+              <button
+                type="button"
+                class="smena"
+                [class.prosla]="s.prosla"
+                [class.prelazi]="s.prelaziPonoc"
+                (click)="izmeni(s)"
+                [attr.aria-label]="
+                  'Izmeni smenu — ' + r.ime + ', ' + c.dan.naziv + ', ' +
+                  s.vremePocetka.slice(0, 5) + ' do ' + s.vremeKraja.slice(0, 5)
+                "
+              >
+                {{ s.vremePocetka.slice(0, 5) }}–{{ s.vremeKraja.slice(0, 5) }}
+                @if (s.prelaziPonoc) {
+                  <span class="plus-dan" title="Završava se sutradan">+1</span>
+                }
+              </button>
+            }
+
+            @if (r.aktivan) {
+              <button
+                type="button"
+                class="dodaj"
+                (click)="nova(r.zaposleniId, c.dan.datum)"
+                [attr.aria-label]="'Dodaj smenu — ' + r.ime + ', ' + c.dan.naziv"
+              >
+                +
+              </button>
+            }
+          </div>
+        }
+
+        <div class="sati" [class.bez-smena]="r.ukupnoSati === 0">
+          @if (r.ukupnoSati) {
+            {{ r.ukupnoSati }} h
+          } @else {
+            slobodan
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <p class="napomena">
+    Klik na smenu je menja, klik na <strong>+</strong> dodaje novu tom zaposlenom tog dana.
+    Prošle smene su prigušene; one koje su već počele mogu se ispraviti, ali ne i ukloniti.
+  </p>
+}

@@ -1,0 +1,12 @@
+<div class="container prazno">
+  <span class="eyebrow">Greška 403</span>
+  <h1>Nemate pristup ovoj strani</h1>
+  <p>
+    Prijavljeni ste kao <strong>{{ auth.punoIme() }}</strong>
+    @if (auth.uloge().length) {
+      ({{ auth.uloge().join(', ') }})
+    }
+    — ta uloga nema pravo na ovaj deo aplikacije.
+  </p>
+  <a routerLink="/meni" class="btn">Nazad na meni</a>
+</div>

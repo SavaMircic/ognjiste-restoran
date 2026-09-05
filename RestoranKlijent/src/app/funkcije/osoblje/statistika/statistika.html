@@ -1,0 +1,85 @@
+<form class="alatka" [formGroup]="forma" (ngSubmit)="ucitaj()" novalidate>
+  <div class="predlozi">
+    <button type="button" class="btn-outline" (click)="izaberiPredlog(7)">7 dana</button>
+    <button type="button" class="btn-outline" (click)="izaberiPredlog(30)">30 dana</button>
+    <button type="button" class="btn-outline" (click)="izaberiPredlog(90)">90 dana</button>
+  </div>
+
+  <div class="period">
+    <label class="polje">
+      <span>Od</span>
+      <input type="date" formControlName="datumOd" />
+    </label>
+
+    <label class="polje">
+      <span>Do</span>
+      <input type="date" formControlName="datumDo" />
+    </label>
+
+    <button type="submit" class="btn">Prikaži</button>
+  </div>
+</form>
+
+<p class="napomena">
+  Prikazani su i prvi i poslednji dan izabranog perioda. Sto ulazi u računicu na dan kada
+  je račun zatvoren, a stavka na dan kada je pripremljena — ne kada je poručena.
+</p>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (praznPeriod()) {
+  <div class="poruka">
+    <h3>Nema evidentiranog rada</h3>
+    <p>U izabranom periodu nema zatvorenih stolova ni pripremljenih stavki.</p>
+  </div>
+} @else if (ucinak(); as u) {
+  @if (imaKonobarske()) {
+    <section>
+      <h2>Kao konobar</h2>
+      <div class="brojke">
+        <div class="brojka">
+          <span class="oznaka">Zatvorenih stolova</span>
+          <strong>{{ u.brojStolova | number }}</strong>
+        </div>
+        <div class="brojka">
+          <span class="oznaka">Ostvaren promet</span>
+          <strong>{{ u.vrednostStolova | number: '1.0-0' }} <small>RSD</small></strong>
+        </div>
+        <div class="brojka">
+          <span class="oznaka">Napojnica</span>
+          <strong class="istaknuto">{{ u.ukupnaNapojnica | number: '1.0-0' }} <small>RSD</small></strong>
+        </div>
+        <div class="brojka">
+          <span class="oznaka">Prosečan račun</span>
+          <strong>{{ u.prosecanRacun | number: '1.0-0' }} <small>RSD</small></strong>
+        </div>
+      </div>
+    </section>
+  }
+
+  @if (imaPripreme()) {
+    <section>
+      <h2>Kao {{ imaKonobarske() ? 'kuvar / šanker' : 'priprema' }}</h2>
+      <div class="brojke">
+        <div class="brojka">
+          <span class="oznaka">Pripremljenih stavki</span>
+          <strong>{{ u.brojPripremljenihStavki | number }}</strong>
+        </div>
+        <div class="brojka">
+          <span class="oznaka">Ukupna količina</span>
+          <strong>{{ u.ukupnaKolicinaPripremljena | number }} <small>kom</small></strong>
+        </div>
+        <div class="brojka">
+          <span class="oznaka">Vrednost pripremljenog</span>
+          <strong>{{ u.vrednostPripremljenih | number: '1.0-0' }} <small>RSD</small></strong>
+        </div>
+      </div>
+    </section>
+  }
+}

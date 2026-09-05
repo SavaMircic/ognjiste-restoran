@@ -1,0 +1,19 @@
+@use '../zajednicko' as a;
+
+@include a.auth;
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--r-3);
+}
+
+@media (max-width: 520px) {
+  .red {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pravila {
+  margin-top: calc(-1 * var(--r-2));
+}

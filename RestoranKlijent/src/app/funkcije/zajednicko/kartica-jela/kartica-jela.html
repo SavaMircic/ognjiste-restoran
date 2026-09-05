@@ -1,0 +1,46 @@
+<a class="kartica" [class.nedostupno]="!jelo().dostupno" [routerLink]="['/meni', jelo().id]">
+  <div class="slika">
+    <img [src]="jelo().slikaUrl | slika" [alt]="jelo().naziv" loading="lazy" ogRezervna />
+
+    @if (jelo().popust) {
+      <span class="znacka popust">−{{ jelo().popust }}%</span>
+    }
+    @if (!jelo().dostupno) {
+      <span class="znacka rasprodato">Trenutno nema</span>
+    }
+  </div>
+
+  <div class="telo">
+    <div class="zaglavlje-kartice">
+      <h3>{{ jelo().naziv }}</h3>
+      <span class="kategorija">{{ jelo().kategorijaNaziv }}</span>
+    </div>
+
+    <p class="opis">{{ jelo().opis }}</p>
+
+    <div class="ocena">
+      @if (jelo().prosecnaOcena !== null) {
+        <og-zvezdice [ocena]="jelo().prosecnaOcena" />
+        <span class="broj">{{ jelo().prosecnaOcena | number: '1.1-1' }}</span>
+        <span class="meta">({{ jelo().brojRecenzija }})</span>
+      } @else {
+        <span class="meta">Još nema recenzija</span>
+      }
+
+      @if (jelo().brojLajkova > 0) {
+        <span class="lajkovi">♥ {{ jelo().brojLajkova }}</span>
+      }
+    </div>
+
+    <div class="dno">
+      <div class="cene">
+        <span class="cena">{{ jelo().cenaSaPopustom | number: '1.0-0' }} RSD</span>
+        @if (jelo().popust) {
+          <span class="stara">{{ jelo().cena | number: '1.0-0' }} RSD</span>
+        }
+      </div>
+
+      <span class="btn">Detalji</span>
+    </div>
+  </div>
+</a>

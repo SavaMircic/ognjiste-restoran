@@ -1,0 +1,37 @@
+@if (gotovo()) {
+  <og-auth-okvir naslov="Proverite email">
+    <div class="ishod">
+      <span class="znak uspeh" aria-hidden="true">✓</span>
+      <p>{{ odgovor() }}</p>
+      <p>Link u poruci vodi na stranicu za unos nove lozinke.</p>
+      <a routerLink="/prijava" class="btn-outline">Nazad na prijavu</a>
+    </div>
+  </og-auth-okvir>
+} @else {
+  <og-auth-okvir
+    naslov="Zaboravljena lozinka"
+    podnaslov="Unesite adresu naloga — šaljemo vam link za postavljanje nove lozinke."
+  >
+    <form [formGroup]="forma" (ngSubmit)="posalji()" novalidate>
+      <label class="polje">
+        <span>Email <em>*</em></span>
+        <input type="email" formControlName="email" autocomplete="email" autofocus />
+        @if (forma.controls.email.touched && forma.controls.email.invalid) {
+          <small class="greska-polja">Unesite ispravnu email adresu.</small>
+        }
+      </label>
+
+      @if (greska()) {
+        <p class="greska-opsta">{{ greska() }}</p>
+      }
+
+      <button type="submit" class="btn" [disabled]="salje()">
+        {{ salje() ? 'Šalje se…' : 'Pošalji link' }}
+      </button>
+    </form>
+
+    <p ispod class="ispod">
+      Setili ste se? <a routerLink="/prijava">Prijavite se</a>
+    </p>
+  </og-auth-okvir>
+}

@@ -1,0 +1,89 @@
+<section class="naslovna">
+  <div class="container">
+    <span class="eyebrow">Naša karta</span>
+    <h1>Meni</h1>
+    <p>
+      Jela po receptima naših baka, od svežih namirnica lokalnih dobavljača.
+      Sve sa žara se sprema po porudžbini.
+    </p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="filteri">
+    <div class="kategorije" role="tablist" aria-label="Kategorije menija">
+      <button
+        type="button"
+        role="tab"
+        [attr.aria-selected]="kategorijaId() === null"
+        [class.aktivna]="kategorijaId() === null"
+        (click)="izaberiKategoriju(null)"
+      >
+        Sve
+      </button>
+
+      @for (k of kategorije(); track k.id) {
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="kategorijaId() === k.id"
+          [class.aktivna]="kategorijaId() === k.id"
+          (click)="izaberiKategoriju(k.id)"
+        >
+          {{ k.naziv }}
+        </button>
+      }
+    </div>
+
+    <label class="sortiranje">
+      <span>Poređaj</span>
+      <select [value]="sortiranje()" (change)="promeniSortiranje($event)">
+        <option value="">Podrazumevano</option>
+        <option value="cena">Po ceni</option>
+        <option value="popularnost">Po popularnosti</option>
+        <option value="ocena">Po oceni</option>
+      </select>
+    </label>
+  </div>
+
+  @if (ucitava()) {
+    <div class="grid">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  } @else if (greska()) {
+    <div class="poruka greska">
+      <h3>Greška</h3>
+      <p>{{ greska() }}</p>
+      <button type="button" class="btn-retry" (click)="ucitaj()">Pokušaj ponovo</button>
+    </div>
+  } @else if (prazno()) {
+    <div class="poruka">
+      <h3>U ovoj kategoriji trenutno nema ničega</h3>
+      <p>Karta se menja po sezoni, pa se dešava da grupa ostane prazna. Ostatak menija je tu.</p>
+      <a routerLink="/meni" class="btn-link">Prikaži sve kategorije</a>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (jelo of stavke(); track jelo.id) {
+        <og-kartica-jela [jelo]="jelo" />
+      }
+    </div>
+
+    <p class="ukupno">
+      Prikazano {{ stavke().length }} od {{ saBrojem(ukupnoZapisa(), 'jela', 'jela', 'jela') }}
+      @if (ukupnoStrana() > 1) {
+        · strana {{ strana() }} od {{ ukupnoStrana() }}
+      }
+    </p>
+
+    @if (ukupnoStrana() > 1) {
+      <og-paginacija
+        [strana]="strana()"
+        [ukupnoStrana]="ukupnoStrana()"
+        (promena)="naStranu($event)"
+      />
+    }
+  }
+</div>

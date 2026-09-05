@@ -1,0 +1,50 @@
+<article class="recenzija">
+  <header>
+    @if (recenzija().autorSlikaUrl) {
+      <img
+        class="avatar"
+        [src]="recenzija().autorSlikaUrl | slika"
+        [alt]="recenzija().autorIme"
+        ogRezervna
+      />
+    } @else {
+      <span class="avatar" aria-hidden="true">{{ inicijali() }}</span>
+    }
+
+    <div class="ko">
+      <strong>{{ recenzija().autorIme }}</strong>
+      <span class="datum">
+        {{ recenzija().datumKreiranja | datumS: 'd. MMMM yyyy.' }}
+        @if (recenzija().datumIzmene) {
+          <em>· izmenjeno</em>
+        }
+      </span>
+    </div>
+
+    <og-zvezdice class="ocena" [ocena]="recenzija().ocena" />
+  </header>
+
+  @if (prikaziJelo() && recenzija().tipRecenzije === 'Jelo' && recenzija().stavkaMenijaId) {
+    <a class="oznaka jelo" [routerLink]="['/meni', recenzija().stavkaMenijaId]">
+      {{ recenzija().nazivStavke }}
+    </a>
+  } @else if (prikaziJelo()) {
+    <span class="oznaka">{{ recenzija().tipRecenzije === 'Usluga' ? 'O usluzi' : 'O restoranu' }}</span>
+  }
+
+  @if (recenzija().naslov) {
+    <h3>{{ recenzija().naslov }}</h3>
+  }
+
+  <p class="tekst">{{ recenzija().tekst }}</p>
+
+  @if (recenzija().odgovorRestorana) {
+    <div class="odgovor">
+      <span class="eyebrow">Odgovor restorana</span>
+      <p>{{ recenzija().odgovorRestorana }}</p>
+      @if (recenzija().datumOdgovora) {
+        <span class="datum">{{ recenzija().datumOdgovora | datumS: 'd. MMMM yyyy.' }}</span>
+      }
+    </div>
+  }
+</article>

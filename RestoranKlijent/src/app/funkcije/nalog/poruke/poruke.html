@@ -1,0 +1,67 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nemate poslatih poruka</h3>
+    <p>Pitanje, sugestija ili pohvala — pišite nam kroz kontakt formu.</p>
+    <a routerLink="/kontakt" class="btn-link">Otvori kontakt</a>
+  </div>
+} @else {
+  <p class="napomena">
+    Ovde su poruke poslate dok ste bili prijavljeni. Poruke poslate kao gost, bez naloga,
+    ne pojavljuju se u ovoj listi.
+  </p>
+
+  <div class="lista">
+    @for (p of sortirane(); track p.id) {
+      <article class="stavka">
+        <div class="zaglavlje">
+          <div class="oznake">
+            <span class="kategorija" [class.prioritetna]="p.prioritetna">
+              {{ nazivKategorije[p.kategorija] }}
+            </span>
+            <span
+              class="status"
+              [class.novo]="p.status === 'Novo'"
+              [class.procitano]="p.status === 'Procitano'"
+              [class.odgovoreno]="p.status === 'Odgovoreno'"
+            >
+              {{ nazivStatusa[p.status] }}
+            </span>
+          </div>
+
+          <span class="datum">{{ p.datumSlanja | datumS }}</span>
+        </div>
+
+        <p class="tekst">{{ p.tekst }}</p>
+
+        @if (p.zeljeniDatumVreme) {
+          <p class="trazeno">
+            Traženi termin: <strong>{{ p.zeljeniDatumVreme | datumS }}</strong>
+            @if (p.zeljeniBrojGostiju) {
+              · <strong>{{ p.zeljeniBrojGostiju }}</strong> gostiju
+            }
+          </p>
+        }
+
+        @if (p.odgovor) {
+          <div class="odgovor">
+            <span class="eyebrow">Odgovor restorana</span>
+            <p>{{ p.odgovor }}</p>
+            @if (p.datumOdgovora) {
+              <span class="datum">{{ p.datumOdgovora | datumS: 'd. MMMM yyyy.' }}</span>
+            }
+          </div>
+        } @else {
+          <p class="ceka">Još nismo odgovorili na ovu poruku.</p>
+        }
+      </article>
+    }
+  </div>
+}

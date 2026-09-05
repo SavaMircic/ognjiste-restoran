@@ -1,0 +1,194 @@
+<div class="alatka">
+  <div class="filteri">
+    <label class="polje">
+      <span>Pretraga</span>
+      <input
+        type="search"
+        placeholder="Ime, prezime ili email"
+        [value]="pretraga()"
+        (input)="pretraga.set($any($event.target).value)"
+      />
+    </label>
+
+    <label class="polje">
+      <span>Pozicija</span>
+      <select (change)="filtrirajUlogu($any($event.target).value)">
+        <option value="">Sve pozicije</option>
+        @for (u of uloge; track u) {
+          <option [value]="u">{{ nazivUloge(u) }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="polje">
+      <span>Status</span>
+      <select (change)="filtrirajStatus($any($event.target).value)">
+        <option value="">Svi</option>
+        <option value="true">Samo aktivni</option>
+        <option value="false">Samo deaktivirani</option>
+      </select>
+    </label>
+  </div>
+
+  @if (menjam() === null) {
+    <button type="button" class="btn" (click)="novi()">Nov nalog</button>
+  }
+</div>
+
+@if (menjam() !== null) {
+  <form class="kartica forma" [formGroup]="forma" (ngSubmit)="sacuvaj()">
+    <h2>{{ naslovForme() }}</h2>
+
+    @if (greskaForme()) {
+      <p class="greska-opsta">{{ greskaForme() }}</p>
+    }
+
+    <div class="red">
+      <label class="polje">
+        <span>Ime <em>*</em></span>
+        <input type="text" formControlName="ime" maxlength="100" />
+        @if (forma.controls.ime.touched && forma.controls.ime.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.ime.getError('server') ?? 'Ime je obavezno.' }}
+          </span>
+        }
+      </label>
+
+      <label class="polje">
+        <span>Prezime <em>*</em></span>
+        <input type="text" formControlName="prezime" maxlength="100" />
+        @if (forma.controls.prezime.touched && forma.controls.prezime.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.prezime.getError('server') ?? 'Prezime je obavezno.' }}
+          </span>
+        }
+      </label>
+    </div>
+
+    <div class="red">
+      <label class="polje">
+        <span>Email <em>*</em></span>
+        <input type="email" formControlName="email" autocomplete="off" />
+        @if (menjam()) {
+          <span class="meta">Email se ne menja — on je korisničko ime naloga.</span>
+        }
+        @if (forma.controls.email.touched && forma.controls.email.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.email.getError('server') ?? 'Email nije u ispravnom formatu.' }}
+          </span>
+        }
+      </label>
+
+      <label class="polje">
+        <span>Pozicija <em>*</em></span>
+        <select formControlName="uloga">
+          @for (u of uloge; track u) {
+            <option [value]="u">{{ nazivUloge(u) }}</option>
+          }
+        </select>
+        @if (forma.controls.uloga.touched && forma.controls.uloga.invalid) {
+          <span class="greska-polja">
+            {{ forma.controls.uloga.getError('server') ?? 'Pozicija je obavezna.' }}
+          </span>
+        }
+      </label>
+    </div>
+
+    @if (!menjam()) {
+      <div class="red">
+        <label class="polje">
+          <span>Privremena lozinka <em>*</em></span>
+          <input type="text" formControlName="privremenaLozinka" autocomplete="off" />
+          <span class="meta">Bar 8 karaktera, jedno veliko slovo i jedan broj.</span>
+          @if (forma.controls.privremenaLozinka.touched && forma.controls.privremenaLozinka.invalid) {
+            <span class="greska-polja">
+              {{ forma.controls.privremenaLozinka.getError('server') ?? 'Lozinka mora imati bar 8 karaktera.' }}
+            </span>
+          }
+        </label>
+
+        <label class="polje">
+          <span>Datum zaposlenja <em>*</em></span>
+          <input type="date" formControlName="datumZaposlenja" />
+          @if (forma.controls.datumZaposlenja.touched && forma.controls.datumZaposlenja.invalid) {
+            <span class="greska-polja">
+              {{ forma.controls.datumZaposlenja.getError('server') ?? 'Datum je obavezan.' }}
+            </span>
+          }
+        </label>
+      </div>
+    }
+
+    <div class="akcije">
+      <button type="submit" class="btn" [disabled]="cuva()">
+        {{ cuva() ? 'Čuva se…' : 'Sačuvaj' }}
+      </button>
+      <button type="button" class="btn-outline" (click)="odustani()">Odustani</button>
+
+      @if (!menjam()) {
+        <span class="napomena">
+          Nalog je odmah upotrebljiv — bez potvrde adrese, jer ga otvara administrator.
+          Radnik lozinku menja sam, kroz svoj profil.
+        </span>
+      }
+    </div>
+  </form>
+}
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema zaposlenih za ovaj filter</h3>
+    <p>Promenite pretragu, poziciju ili status.</p>
+  </div>
+} @else {
+  <p class="meta broj-zapisa">Ukupno {{ ukupnoZapisa() }} zaposlenih</p>
+
+  <div class="lista">
+    @for (z of zaposleni(); track z.id) {
+      <article class="zaposleni" [class.neaktivan]="!z.aktivan">
+        <div class="podaci">
+          <p class="ime">{{ z.ime }} {{ z.prezime }}</p>
+          <p class="meta">
+            {{ z.email }} · od {{ z.datumZaposlenja | datumS: 'd.M.yyyy.' }}
+          </p>
+        </div>
+
+        <span class="pozicija">{{ nazivUloge(z.uloga) }}</span>
+
+        <span class="status" [class]="z.aktivan ? 'status resena' : 'status odbijena'">
+          {{ z.aktivan ? 'Aktivan' : 'Deaktiviran' }}
+        </span>
+
+        <div class="akcije">
+          <button type="button" class="btn-outline" (click)="izmeni(z)">Izmeni</button>
+          @if (z.aktivan) {
+            <button
+              type="button"
+              class="btn-outline danger"
+              [disabled]="uToku() === z.id"
+              (click)="deaktiviraj(z)"
+            >
+              Deaktiviraj
+            </button>
+          }
+        </div>
+      </article>
+    }
+  </div>
+
+  @if (ukupnoStrana() > 1) {
+    <og-paginacija
+      [strana]="strana()"
+      [ukupnoStrana]="ukupnoStrana()"
+      (promena)="naStranu($event)"
+    />
+  }
+}

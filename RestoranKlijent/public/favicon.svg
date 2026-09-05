@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ognjište">
+  <rect width="64" height="64" rx="14" fill="#14100E"/>
+  <path d="M17 46 V33 a15 15 0 0 1 30 0 V46" fill="none" stroke="#C2703D" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="12" y1="46" x2="52" y2="46" stroke="#C2703D" stroke-width="5.5" stroke-linecap="round"/>
+  <g transform="translate(32 33) scale(0.78) translate(-38 -38.5)">
+    <path d="M38 50 c-5-4-6-9-3-13 0 3 2 4 3 3 -1-5 2-8 5-10 -1 4 1 6 3 9 3 4 1 9-3 11 z" fill="#D4AF6A"/>
+  </g>
+</svg>

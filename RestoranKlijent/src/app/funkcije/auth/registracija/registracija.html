@@ -1,0 +1,113 @@
+@if (gotovo()) {
+  <og-auth-okvir naslov="Proverite email">
+    <div class="ishod">
+      <span class="znak uspeh" aria-hidden="true">✓</span>
+      <p>
+        Poslali smo link za potvrdu na <strong>{{ poslataAdresa() }}</strong>.
+        Nalog možete koristiti tek kad potvrdite adresu.
+      </p>
+      <p>Ako poruka ne stigne u roku od par minuta, proverite i neželjenu poštu.</p>
+      <a routerLink="/posalji-ponovo-potvrdu" class="btn-outline">Pošalji ponovo</a>
+    </div>
+
+    <p ispod class="ispod">
+      Već ste potvrdili? <a routerLink="/prijava">Prijavite se</a>
+    </p>
+  </og-auth-okvir>
+} @else {
+  <og-auth-okvir naslov="Registracija" podnaslov="Nalog vam treba za rezervacije, recenzije i omiljena jela.">
+    <form [formGroup]="forma" (ngSubmit)="posalji()" novalidate>
+      <div class="red">
+        <label class="polje">
+          <span>Ime <em>*</em></span>
+          <input type="text" formControlName="ime" autocomplete="given-name" maxlength="100" />
+          @if (forma.controls.ime.touched && forma.controls.ime.invalid) {
+            <small class="greska-polja">
+              {{
+                forma.controls.ime.getError('server') ??
+                  (forma.controls.ime.hasError('pattern')
+                    ? 'Dozvoljena su samo slova, razmak, crtica i apostrof.'
+                    : 'Ime je obavezno, najmanje dva slova.')
+              }}
+            </small>
+          }
+        </label>
+
+        <label class="polje">
+          <span>Prezime <em>*</em></span>
+          <input type="text" formControlName="prezime" autocomplete="family-name" maxlength="100" />
+          @if (forma.controls.prezime.touched && forma.controls.prezime.invalid) {
+            <small class="greska-polja">
+              {{
+                forma.controls.prezime.getError('server') ??
+                  (forma.controls.prezime.hasError('pattern')
+                    ? 'Dozvoljena su samo slova, razmak, crtica i apostrof.'
+                    : 'Prezime je obavezno, najmanje dva slova.')
+              }}
+            </small>
+          }
+        </label>
+      </div>
+
+      <label class="polje">
+        <span>Email <em>*</em></span>
+        <input type="email" formControlName="email" autocomplete="email" />
+        @if (forma.controls.email.touched && forma.controls.email.invalid) {
+          <small class="greska-polja">
+            {{ forma.controls.email.getError('server') ?? 'Unesite ispravnu email adresu.' }}
+          </small>
+        }
+      </label>
+
+      <label class="polje">
+        <span>Telefon</span>
+        <input type="tel" formControlName="brojTelefona" autocomplete="tel" placeholder="opciono, 064 123 456" />
+        @if (forma.controls.brojTelefona.touched && forma.controls.brojTelefona.invalid) {
+          <small class="greska-polja">
+            {{
+              forma.controls.brojTelefona.getError('server') ??
+                'Nije ispravan broj. Primeri: 064 123 4567, 021/555-123, +381641234567.'
+            }}
+          </small>
+        }
+      </label>
+
+      <label class="polje">
+        <span>Lozinka <em>*</em></span>
+        <input type="password" formControlName="lozinka" autocomplete="new-password" />
+        @if (forma.controls.lozinka.getError('server'); as serverska) {
+          <small class="greska-polja">{{ serverska }}</small>
+        }
+      </label>
+
+      <ul class="pravila">
+        @for (p of pravila; track p.tekst) {
+          <li [class.ispunjeno]="ispunjeno(p.vazi)">
+            <span aria-hidden="true">{{ ispunjeno(p.vazi) ? '✓' : '○' }}</span>
+            {{ p.tekst }}
+          </li>
+        }
+      </ul>
+
+      <label class="polje">
+        <span>Potvrda lozinke <em>*</em></span>
+        <input type="password" formControlName="potvrdaLozinke" autocomplete="new-password" />
+        @if (forma.controls.potvrdaLozinke.touched && forma.hasError('nepoklapanje')) {
+          <small class="greska-polja">Lozinke se ne poklapaju.</small>
+        }
+      </label>
+
+      @if (greska()) {
+        <p class="greska-opsta">{{ greska() }}</p>
+      }
+
+      <button type="submit" class="btn" [disabled]="salje()">
+        {{ salje() ? 'Registracija…' : 'Registruj se' }}
+      </button>
+    </form>
+
+    <p ispod class="ispod">
+      Već imate nalog? <a routerLink="/prijava">Prijavite se</a>
+    </p>
+  </og-auth-okvir>
+}

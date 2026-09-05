@@ -1,0 +1,146 @@
+@use '../zajednicko' as n;
+
+@include n.nalog;
+
+:host {
+  display: block;
+  padding-bottom: var(--r-6);
+}
+
+.poziv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje-veliko);
+  padding: var(--r-3);
+  margin-bottom: var(--r-3);
+
+  p {
+    margin: 0;
+    color: var(--tekst-3);
+    font-size: 14px;
+    max-width: 52ch;
+  }
+}
+
+.forma {
+  margin-bottom: var(--r-4);
+}
+
+.izbor-ocene {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  button {
+    background: none;
+    border: 0;
+    padding: 0 2px;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--ivica);
+    cursor: pointer;
+    transition: color 0.12s ease;
+
+    &.puna {
+      color: var(--zlato);
+    }
+
+    &:hover {
+      color: var(--zlato);
+    }
+  }
+}
+
+.broj-ocene {
+  margin-left: var(--r-2);
+  font-size: 13px;
+  color: var(--tekst-3);
+}
+
+.brojac {
+  align-self: flex-end;
+  font-size: 11px;
+  color: var(--tekst-3);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+}
+
+.stavka {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje-veliko);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+
+  h3 {
+    font-size: 17px;
+    margin: 0;
+  }
+}
+
+.zaglavlje {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: var(--r-2);
+    --velicina-zvezde: 15px;
+  }
+}
+
+.tip {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--zlato);
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.datum {
+  font-size: 12px;
+  color: var(--tekst-3);
+}
+
+.tekst {
+  margin: 0;
+  color: var(--tekst-2);
+  font-size: 14px;
+  white-space: pre-line;
+}
+
+.odgovor {
+  padding: var(--r-2) var(--r-3);
+  border-left: 3px solid var(--bakar);
+  background: var(--povrsina-2);
+  border-radius: 0 var(--zaobljenje) var(--zaobljenje) 0;
+
+  p {
+    margin: var(--r-1) 0 0;
+    color: var(--tekst-2);
+    font-size: 13px;
+  }
+}
+
+.akcije {
+  display: flex;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}

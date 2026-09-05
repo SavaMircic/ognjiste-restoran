@@ -1,0 +1,56 @@
+.strana {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--r-3);
+  padding: var(--r-6) var(--r-3);
+  min-height: 60vh;
+}
+
+.kartica {
+  width: 100%;
+  max-width: 440px;
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje-veliko);
+  padding: var(--r-5) var(--r-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-3);
+  box-shadow: var(--senka);
+}
+
+.brend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--r-1);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  strong {
+    font-family: var(--pismo-naslov);
+    font-size: 17px;
+    letter-spacing: 0.14em;
+    color: var(--tekst);
+  }
+}
+
+header {
+  text-align: center;
+
+  h1 {
+    font-size: 26px;
+    margin: 0 0 var(--r-1);
+  }
+
+  p {
+    color: var(--tekst-3);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+  }
+}

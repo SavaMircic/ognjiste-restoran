@@ -1,0 +1,237 @@
+<div class="prebacivac">
+  <button type="button" [class.aktivan]="pogled() === 'promet'" (click)="prebaci('promet')">
+    Promet
+  </button>
+  <button type="button" [class.aktivan]="pogled() === 'jela'" (click)="prebaci('jela')">
+    Artikli
+  </button>
+  <button type="button" [class.aktivan]="pogled() === 'ucinak'" (click)="prebaci('ucinak')">
+    Učinak zaposlenih
+  </button>
+</div>
+
+<div class="alatka">
+  <div class="period">
+    <label class="polje usko">
+      <span>Od</span>
+      <input type="date" [value]="datumOd()" (change)="postaviDatum('od', $any($event.target).value)" />
+    </label>
+
+    <label class="polje usko">
+      <span>Do</span>
+      <input type="date" [value]="datumDo()" (change)="postaviDatum('do', $any($event.target).value)" />
+    </label>
+
+    <div class="brzi">
+      <button type="button" (click)="raspon(7)">7 dana</button>
+      <button type="button" (click)="raspon(30)">30 dana</button>
+      <button type="button" (click)="raspon(90)">90 dana</button>
+    </div>
+
+    <button
+      type="button"
+      class="ponisti"
+      [disabled]="!promenjeno()"
+      title="Vrati period, grupisanje i redosled na podrazumevano"
+      (click)="ponisti()"
+    >
+      ↺ Poništi
+    </button>
+  </div>
+
+  @if (pogled() === 'promet') {
+    <label class="polje usko">
+      <span>Grupisanje</span>
+      <select [value]="grupisanje()" (change)="postaviGrupisanje($any($event.target).value)">
+        @for (g of grupisanja; track g) {
+          <option [value]="g">{{ nazivGrupisanja[g] }}</option>
+        }
+      </select>
+    </label>
+  } @else if (pogled() === 'jela') {
+    <div class="uz-jela">
+      <label class="polje usko">
+        <span>Redosled</span>
+        <select [value]="redosled()" (change)="postaviRedosled($any($event.target).value)">
+          <option value="Najprodavanije">Najprodavanije</option>
+          <option value="NajmanjeProdavano">Najmanje prodavano</option>
+        </select>
+      </label>
+
+      <label class="polje usko">
+        <span>Prikaži</span>
+        <select [value]="limit()" (change)="limit.set(+$any($event.target).value)">
+          @for (l of limiti; track l) {
+            <option [value]="l">{{ l ? 'Prvih ' + l : 'Sve' }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  }
+</div>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema podataka za izabrani period</h3>
+    <p>Izveštaji računaju samo zatvorene račune — proširite raspon datuma.</p>
+  </div>
+} @else if (pogled() === 'promet') {
+  @if (prihod(); as r) {
+    <div class="brojke">
+      <div class="brojka istaknuta">
+        <span class="oznaka">Promet</span>
+        <strong>{{ r.ukupanPrihod | number: '1.0-0' }} <small>RSD</small></strong>
+      </div>
+      <div class="brojka">
+        <span class="oznaka">Napojnica</span>
+        <strong>{{ r.ukupnaNapojnica | number: '1.0-0' }} <small>RSD</small></strong>
+      </div>
+      <div class="brojka">
+        <span class="oznaka">Računa</span>
+        <strong>{{ r.brojPorudzbina }}</strong>
+      </div>
+      <div class="brojka">
+        <span class="oznaka">Prosečan račun</span>
+        <strong>{{ r.prosecanRacun | number: '1.0-0' }} <small>RSD</small></strong>
+      </div>
+    </div>
+
+    <p class="napomena">
+      Napojnica i broj računa se ne dele po grupama — jedan račun obično obuhvata više
+      kategorija, pa bi svaka podela bila proizvoljna.
+    </p>
+
+    <div class="zaglavlje-kolona zaglavlje-trake">
+      <span>{{ nazivGrupisanja[grupisanje()] }}</span>
+      <span></span>
+      <span class="desno">Prihod (RSD)</span>
+      <span class="desno">Udeo</span>
+      <span class="desno">Količina</span>
+    </div>
+
+    <div class="trake">
+      @for (s of r.stavke; track s.grupa) {
+        <div class="traka-red">
+          <span class="oznaka-grupe">{{ s.grupa }}</span>
+          <div class="traka-okvir">
+            <div class="traka-pun" [style.width.%]="sirina(s.prihod)"></div>
+          </div>
+          <span class="iznos">{{ s.prihod | number: '1.0-0' }}</span>
+          <span class="udeo">{{ s.udeoProcenat | number: '1.0-1' }}%</span>
+          <span class="kolicina">{{ s.kolicina }} kom</span>
+        </div>
+      }
+    </div>
+  }
+} @else if (pogled() === 'jela') {
+  <p class="meta broj-zapisa">
+    {{ prikazanaJela().length }} od {{ jela().length }} artikala
+    · rangirano po broju prodatih komada
+  </p>
+
+  <div class="zaglavlje-kolona zaglavlje-jela">
+    <span>#</span>
+    <span>Artikal</span>
+    <span class="desno">Prodato</span>
+    <span class="desno">Prihod</span>
+  </div>
+
+  <div class="lista">
+    @for (j of prikazanaJela(); track j.stavkaMenijaId) {
+      <article class="jelo" [class.bez-prodaje]="j.ukupnaKolicina === 0">
+        <span class="rang">{{ j.rang }}</span>
+
+        <div class="podaci">
+          <p class="naziv">{{ j.naziv }}</p>
+          <p class="meta">{{ j.kategorija }} · na {{ j.brojPorudzbina }} računa</p>
+        </div>
+
+        <span class="kolicina-jela">
+          <strong>{{ j.ukupnaKolicina }}</strong> kom
+        </span>
+
+        <span class="prihod-jela">{{ j.prihod | number: '1.0-0' }} RSD</span>
+      </article>
+    }
+  </div>
+
+  @if (redosled() === 'NajmanjeProdavano') {
+    <p class="napomena">
+      Lista uključuje i artikle bez ijedne prodaje u periodu — to su prvi kandidati za
+      izbacivanje iz menija.
+    </p>
+  }
+} @else {
+  @if (konobari().length) {
+    <h2>Kao konobari</h2>
+
+    <div class="zaglavlje-kolona zaglavlje-konobara">
+      <span>Zaposleni</span>
+      <span class="desno">Stolova</span>
+      <span class="desno">Promet</span>
+      <span class="desno">Napojnica</span>
+      <span class="desno">Prosečan račun</span>
+    </div>
+
+    <div class="lista">
+      @for (u of konobari(); track u.zaposleniId) {
+        <article class="radnik">
+          <span class="ime">{{ u.imeZaposlenog }}</span>
+          <span class="metrika">
+            <strong>{{ u.brojStolova }}</strong> <small>stolova</small>
+          </span>
+          <span class="metrika">
+            <strong>{{ u.vrednostStolova | number: '1.0-0' }}</strong> <small>RSD prometa</small>
+          </span>
+          <span class="metrika">
+            <strong>{{ u.ukupnaNapojnica | number: '1.0-0' }}</strong> <small>RSD napojnice</small>
+          </span>
+          <span class="metrika">
+            <strong>{{ u.prosecanRacun | number: '1.0-0' }}</strong> <small>prosek</small>
+          </span>
+        </article>
+      }
+    </div>
+  }
+
+  @if (priprema().length) {
+    <h2>U kuhinji i na šanku</h2>
+
+    <div class="zaglavlje-kolona zaglavlje-pripreme">
+      <span>Zaposleni</span>
+      <span class="desno">Stavki</span>
+      <span class="desno">Komada</span>
+      <span class="desno">Vrednost</span>
+    </div>
+
+    <div class="lista">
+      @for (u of priprema(); track u.zaposleniId) {
+        <article class="radnik priprema">
+          <span class="ime">{{ u.imeZaposlenog }}</span>
+          <span class="metrika">
+            <strong>{{ u.brojPripremljenihStavki }}</strong> <small>stavki</small>
+          </span>
+          <span class="metrika">
+            <strong>{{ u.ukupnaKolicinaPripremljena }}</strong> <small>komada</small>
+          </span>
+          <span class="metrika">
+            <strong>{{ u.vrednostPripremljenih | number: '1.0-0' }}</strong> <small>RSD vrednosti</small>
+          </span>
+        </article>
+      }
+    </div>
+  }
+
+  <p class="napomena">
+    Jedan zaposleni može biti u obe liste — izveštaj meri i zatvorene stolove i
+    pripremljene stavke, pa ko radi oboje, pojavljuje se dvaput.
+  </p>
+}

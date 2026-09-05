@@ -1,0 +1,72 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nemate dodeljenih bonusa</h3>
+    <p>Bonuse dodeljuje menadžer na osnovu izveštaja o učinku.</p>
+  </div>
+} @else {
+  @if (aktivni().length) {
+    <div class="zbir">
+      <span class="oznaka">Trenutno važi</span>
+      <strong>{{ zbirAktivnih() | number: '1.0-0' }} <small>RSD</small></strong>
+      <span class="meta">
+        kroz {{ aktivni().length }} {{ aktivni().length === 1 ? 'bonus' : 'bonusa' }}
+      </span>
+    </div>
+  }
+
+  @if (aktivni().length) {
+    <h2>Aktivni</h2>
+    <div class="lista">
+      @for (b of aktivni(); track b.id) {
+        <article class="bonus vazi">
+          <div class="iznos">
+            <strong>{{ b.iznos | number: '1.0-0' }}</strong>
+            <small>RSD</small>
+          </div>
+
+          <div class="podaci">
+            <p class="razlog">{{ b.razlog }}</p>
+            <p class="meta">
+              Važi {{ b.datumPocetka | datumS: 'd.M.yyyy.' }} – {{ b.datumKraja | datumS: 'd.M.yyyy.' }}
+              · dodelio/la {{ b.dodelioIme }}, {{ b.datumDodele | datumS: 'd.M.yyyy.' }}
+            </p>
+          </div>
+
+          <span class="status resena">Važi</span>
+        </article>
+      }
+    </div>
+  }
+
+  @if (istekli().length) {
+    <h2>Istekli</h2>
+    <div class="lista">
+      @for (b of istekli(); track b.id) {
+        <article class="bonus">
+          <div class="iznos">
+            <strong>{{ b.iznos | number: '1.0-0' }}</strong>
+            <small>RSD</small>
+          </div>
+
+          <div class="podaci">
+            <p class="razlog">{{ b.razlog }}</p>
+            <p class="meta">
+              Važio {{ b.datumPocetka | datumS: 'd.M.yyyy.' }} – {{ b.datumKraja | datumS: 'd.M.yyyy.' }}
+              · dodelio/la {{ b.dodelioIme }}
+            </p>
+          </div>
+
+          <span class="status">Istekao</span>
+        </article>
+      }
+    </div>
+  }
+}

@@ -1,0 +1,202 @@
+<div class="alatka">
+  <div class="filteri">
+    <label class="polje">
+      <span>Pretraga</span>
+      <input
+        type="search"
+        placeholder="Ime, prezime ili email"
+        [value]="pretraga()"
+        (input)="pretraga.set($any($event.target).value)"
+      />
+    </label>
+
+    <label class="polje">
+      <span>Status</span>
+      <select (change)="filtrirajStatus($any($event.target).value)">
+        <option value="">Svi nalozi</option>
+        <option value="false">Samo aktivni</option>
+        <option value="true">Samo blokirani</option>
+      </select>
+    </label>
+  </div>
+</div>
+
+@if (akcija(); as a) {
+  <div class="kartica forma mera">
+    <h2>
+      {{ a.tip === 'blokada' ? 'Blokada naloga' : 'Zabrana komentarisanja' }} — {{ a.ime }}
+    </h2>
+
+    @if (greskaForme()) {
+      <p class="greska-opsta">{{ greskaForme() }}</p>
+    }
+
+    @if (a.tip === 'blokada') {
+      <form [formGroup]="formaBlokade" (ngSubmit)="posalji()">
+        <div class="red">
+          <label class="polje">
+            <span>Razlog <em>*</em></span>
+            <input type="text" formControlName="razlog" maxlength="500" />
+            @if (formaBlokade.controls.razlog.touched && formaBlokade.controls.razlog.invalid) {
+              <span class="greska-polja">
+                {{ formaBlokade.controls.razlog.getError('server') ?? 'Razlog je obavezan.' }}
+              </span>
+            }
+          </label>
+
+          <label class="polje">
+            <span>Blokada do</span>
+            <input type="datetime-local" formControlName="datumDo" />
+            @if (formaBlokade.controls.datumDo.touched && formaBlokade.controls.datumDo.invalid) {
+              <span class="greska-polja">
+                {{ formaBlokade.controls.datumDo.getError('server') ?? 'Datum mora biti u budućnosti.' }}
+              </span>
+            }
+          </label>
+        </div>
+
+        <div class="akcije">
+          <button type="submit" class="btn" [disabled]="salje()">
+            {{ salje() ? 'Primenjuje se…' : 'Blokiraj' }}
+          </button>
+          <button type="button" class="btn-outline" (click)="zatvoriAkciju()">Odustani</button>
+          <span class="napomena">
+            Ostavite datum praznim za trajnu blokadu. Sa datumom blokada ističe sama.
+          </span>
+        </div>
+      </form>
+    } @else {
+      <form [formGroup]="formaZabrane" (ngSubmit)="posalji()">
+        <div class="red">
+          <label class="polje usko">
+            <span>Broj dana <em>*</em></span>
+            <input type="number" formControlName="brojDana" min="1" max="365" />
+            @if (formaZabrane.controls.brojDana.touched && formaZabrane.controls.brojDana.invalid) {
+              <span class="greska-polja">
+                {{ formaZabrane.controls.brojDana.getError('server') ?? 'Između 1 i 365 dana.' }}
+              </span>
+            }
+          </label>
+
+          <label class="polje">
+            <span>Razlog <em>*</em></span>
+            <input type="text" formControlName="razlog" maxlength="500" />
+            @if (formaZabrane.controls.razlog.touched && formaZabrane.controls.razlog.invalid) {
+              <span class="greska-polja">
+                {{ formaZabrane.controls.razlog.getError('server') ?? 'Razlog je obavezan.' }}
+              </span>
+            }
+          </label>
+        </div>
+
+        <div class="akcije">
+          <button type="submit" class="btn" [disabled]="salje()">
+            {{ salje() ? 'Primenjuje se…' : 'Zabrani' }}
+          </button>
+          <button type="button" class="btn-outline" (click)="zatvoriAkciju()">Odustani</button>
+          <span class="napomena">Nalog nastavlja da radi — gubi samo pravo na recenzije.</span>
+        </div>
+      </form>
+    }
+  </div>
+}
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema korisnika za ovaj filter</h3>
+    <p>Promenite pretragu ili status.</p>
+  </div>
+} @else {
+  <p class="meta broj-zapisa">Ukupno {{ ukupnoZapisa() }} naloga</p>
+
+  <div class="lista">
+    @for (k of korisnici(); track k.id) {
+      <article class="korisnik" [class.blokiran]="k.blokiran">
+        <div class="podaci">
+          <p class="ime">
+            {{ k.ime }} {{ k.prezime }}
+            @for (u of k.uloge; track u) {
+              <span class="uloga-oznaka">{{ u }}</span>
+            }
+          </p>
+          <p class="meta">
+            {{ k.email }}
+            @if (k.brojTelefona) {
+              · {{ k.brojTelefona }}
+            }
+            · od {{ k.datumRegistracije | datumS: 'd.M.yyyy.' }}
+          </p>
+        </div>
+
+        <div class="statusi">
+          @if (k.blokiran) {
+            <span class="status odbijena">
+              @if (k.blokiranDo) {
+                Blokiran do {{ k.blokiranDo | datumS: 'd.M.yyyy.' }}
+              } @else {
+                Trajno blokiran
+              }
+            </span>
+          } @else {
+            <span class="status resena">Aktivan</span>
+          }
+
+          @if (zabranaVazi(k)) {
+            <span class="status u-obradi">
+              Bez recenzija do {{ k.zabranaKomentarisanjaDo | datumS: 'd.M.yyyy.' }}
+            </span>
+          }
+        </div>
+
+        <div class="akcije">
+          <a class="btn-outline" [routerLink]="[k.id]">Detalj</a>
+
+          @if (k.blokiran) {
+            <button
+              type="button"
+              class="btn-outline"
+              [disabled]="uToku() === k.id"
+              (click)="odblokiraj(k)"
+            >
+              Odblokiraj
+            </button>
+          } @else {
+            <button type="button" class="btn-outline" (click)="otvoriZabranu(k)">
+              {{ zabranaVazi(k) ? 'Produži zabranu' : 'Zabrani recenzije' }}
+            </button>
+            <button type="button" class="btn-outline danger" (click)="otvoriBlokadu(k)">
+              Blokiraj
+            </button>
+          }
+
+          @if (zabranaVazi(k)) {
+            <button
+              type="button"
+              class="btn-outline"
+              [disabled]="uToku() === k.id"
+              (click)="ukiniZabranu(k)"
+            >
+              Skini zabranu
+            </button>
+          }
+        </div>
+      </article>
+    }
+  </div>
+
+  @if (ukupnoStrana() > 1) {
+    <og-paginacija
+      [strana]="strana()"
+      [ukupnoStrana]="ukupnoStrana()"
+      (promena)="naStranu($event)"
+    />
+  }
+}

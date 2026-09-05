@@ -1,0 +1,27 @@
+<og-auth-okvir [naslov]="naslov()">
+  <div class="ishod">
+    @switch (stanje()) {
+      @case ('radi') {
+        <span class="znak ceka" aria-hidden="true">⏳</span>
+        <p>Samo trenutak.</p>
+      }
+
+      @case ('uspeh') {
+        <span class="znak uspeh" aria-hidden="true">✓</span>
+        <p>{{ poruka() }}</p>
+        <p>Sada se možete prijaviti i rezervisati sto.</p>
+        <a routerLink="/prijava" class="btn-outline">Prijavi se</a>
+      }
+
+      @default {
+        <span class="znak greska" aria-hidden="true">✕</span>
+        <p>{{ poruka() }}</p>
+        <a routerLink="/posalji-ponovo-potvrdu" class="btn-outline">Pošalji nov link</a>
+      }
+    }
+  </div>
+
+  <p ispod class="ispod">
+    Nazad na <a routerLink="/">početnu</a>
+  </p>
+</og-auth-okvir>

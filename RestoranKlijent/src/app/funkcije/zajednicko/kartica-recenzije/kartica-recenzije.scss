@@ -1,0 +1,108 @@
+.recenzija {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje-veliko);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--sljiva);
+  color: var(--zlato);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+
+  &:is(img) {
+    object-fit: cover;
+  }
+}
+
+.ko {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+  min-width: 0;
+
+  strong {
+    font-size: 14px;
+    color: var(--tekst);
+  }
+}
+
+.datum {
+  font-size: 12px;
+  color: var(--tekst-3);
+
+  em {
+    font-style: normal;
+  }
+}
+
+.ocena {
+  margin-left: auto;
+  --velicina-zvezde: 15px;
+}
+
+.oznaka {
+  align-self: flex-start;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tekst-3);
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  padding: 3px 10px;
+  text-decoration: none;
+}
+
+a.oznaka:hover {
+  color: var(--zlato);
+  border-color: var(--zlato);
+  text-decoration: none;
+}
+
+h3 {
+  font-size: 17px;
+  margin: 0;
+}
+
+.tekst {
+  margin: 0;
+  color: var(--tekst-2);
+  font-size: 14px;
+  white-space: pre-line;
+}
+
+.odgovor {
+  margin-top: var(--r-1);
+  padding: var(--r-2) var(--r-3);
+  border-left: 3px solid var(--bakar);
+  background: var(--povrsina-2);
+  border-radius: 0 var(--zaobljenje) var(--zaobljenje) 0;
+
+  p {
+    margin: var(--r-1) 0 0;
+    color: var(--tekst-2);
+    font-size: 13px;
+  }
+
+  .datum {
+    display: block;
+    margin-top: var(--r-1);
+  }
+}

@@ -1,0 +1,47 @@
+@use '../../../styles/tokens' as t;
+
+.naslovna {
+  background: linear-gradient(180deg, var(--sljiva) 0%, var(--pozadina) 100%);
+  border-bottom: 1px solid var(--ivica);
+  padding: var(--r-6) 0 var(--r-4);
+  margin-bottom: var(--r-4);
+
+  h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    margin: var(--r-1) 0 0;
+  }
+
+  p {
+    color: var(--tekst-3);
+    font-size: 13px;
+    margin: var(--r-1) 0 0;
+  }
+}
+
+.kartice {
+  display: flex;
+  gap: var(--r-1);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-4);
+  border-bottom: 1px solid var(--ivica);
+
+  a {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--tekst-2);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--tekst);
+      text-decoration: none;
+    }
+
+    &.aktivna {
+      color: var(--bakar);
+      border-bottom-color: var(--bakar);
+      font-weight: 700;
+    }
+  }
+}

@@ -1,0 +1,60 @@
+<section class="naslovna">
+  <div class="container">
+    <span class="eyebrow">Kod nas</span>
+    <h1>Galerija</h1>
+    <p>Sala, bašta, šank i kuhinja — kako Ognjište izgleda kad se sve upali.</p>
+  </div>
+</section>
+
+<div class="container">
+  @if (ucitava()) {
+    <div class="grid">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  } @else if (greska()) {
+    <div class="poruka greska">
+      <h3>Greška</h3>
+      <p>{{ greska() }}</p>
+      <button type="button" class="btn-retry" (click)="ucitaj()">Pokušaj ponovo</button>
+    </div>
+  } @else if (prazno()) {
+    <div class="poruka">
+      <h3>Galerija se sprema</h3>
+      <p>Fotografije još nisu objavljene. Dotle, najbolje se vidi uživo — sto se zakazuje odmah.</p>
+      <a routerLink="/rezervacija" class="btn-link">Rezerviši sto</a>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (o of oblasti(); track o.naziv) {
+        <button
+          type="button"
+          class="plocica"
+          (click)="otvori(o.naziv)"
+          [attr.aria-label]="
+            'Otvori oblast ' + o.naziv + ', ' + saBrojem(o.slike.length, 'slika', 'slike', 'slika')
+          "
+        >
+          <img
+            [src]="o.naslovna.slikaUrl | slika"
+            [alt]="o.naslovna.opis ?? o.naziv"
+            loading="lazy"
+            ogRezervna
+          />
+
+          <span class="natpis">
+            <strong>{{ o.naziv }}</strong>
+            <small>{{ saBrojem(o.slike.length, 'slika', 'slike', 'slika') }}</small>
+          </span>
+
+          <span class="znak-slajdera" aria-hidden="true">{{ o.slike.length }}</span>
+        </button>
+      }
+    </div>
+  }
+</div>
+
+@if (oblast(); as o) {
+  <og-galerija-slajder [oblast]="o" (zatvoreno)="zatvori()" />
+}

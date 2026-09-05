@@ -1,0 +1,61 @@
+<header class="header" [class.radni]="auth.radniRezim()">
+  <div class="container traka">
+    <a [routerLink]="auth.radniRezim() ? '/osoblje' : '/'" class="brend" (click)="zatvori()">
+      <og-logo [velicina]="42" />
+      <span class="ime">
+        <strong>OGNJIŠTE</strong>
+        <small class="eyebrow">{{ auth.radniRezim() ? 'Radni deo' : 'Novi Sad' }}</small>
+      </span>
+    </a>
+
+    <button
+      type="button"
+      class="prekidac"
+      [attr.aria-expanded]="otvoren()"
+      aria-label="Meni navigacije"
+      (click)="prebaci()"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="navigacija" [class.otvorena]="otvoren()">
+      @if (auth.radniRezim()) {
+        @for (a of alati(); track a.putanja) {
+          <a [routerLink]="a.putanja" routerLinkActive="aktivna" class="radni-deo" (click)="zatvori()">
+            {{ a.naziv }}
+          </a>
+        }
+
+        <a routerLink="/osoblje" routerLinkActive="aktivna" (click)="zatvori()">Moj nalog</a>
+
+        <div class="razmak"></div>
+
+        <a routerLink="/nalog" routerLinkActive="aktivna" class="ime-korisnika" (click)="zatvori()">
+          {{ auth.punoIme() }}
+        </a>
+      } @else {
+        @for (veza of veze; track veza.putanja) {
+          <a [routerLink]="veza.putanja" routerLinkActive="aktivna" (click)="zatvori()">{{ veza.naziv }}</a>
+        }
+
+        <div class="razmak"></div>
+
+        @if (auth.prijavljen()) {
+          @if (jeOsoblje()) {
+            <a routerLink="/osoblje" routerLinkActive="aktivna" class="radni-deo" (click)="zatvori()">
+              Radni deo
+            </a>
+          }
+
+          <a routerLink="/nalog" routerLinkActive="aktivna" class="ime-korisnika" (click)="zatvori()">
+            {{ auth.punoIme() }}
+          </a>
+        } @else {
+          <a routerLink="/prijava" routerLinkActive="aktivna" (click)="zatvori()">Prijava</a>
+        }
+
+        <a routerLink="/rezervacija" class="cta" (click)="zatvori()">Rezerviši sto</a>
+      }
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,151 @@
+@use '../../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.zaglavlje {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+  padding-bottom: var(--r-3);
+  border-bottom: 1px solid var(--ivica);
+
+  h1 {
+    font-family: var(--pismo-telo);
+    font-size: 26px;
+    margin: 2px 0 4px;
+  }
+
+  .meta {
+    margin: 0;
+  }
+}
+
+.nazad {
+  font-size: 13px;
+  color: var(--tekst-3);
+}
+
+.statusi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.brojke {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--r-2);
+  margin-bottom: var(--r-3);
+}
+
+.brojka {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .oznaka {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tekst-3);
+  }
+
+  strong {
+    font-size: 22px;
+    color: var(--tekst);
+    font-variant-numeric: tabular-nums;
+  }
+
+  small {
+    font-size: 12px;
+    color: var(--tekst-3);
+    font-weight: 400;
+  }
+}
+
+.celina {
+  margin-top: var(--r-4);
+}
+
+.celina h2 .meta {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+}
+
+.red-zapisa {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: 10px var(--r-3);
+
+  &.uklonjena {
+    opacity: 0.55;
+  }
+}
+
+.naslov {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tekst);
+}
+
+.podaci .meta {
+  margin: 2px 0 0;
+}
+
+.ocena {
+  color: var(--bakar);
+  font-size: 14px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.kod {
+  font-size: 12px;
+  color: var(--tekst-3);
+  white-space: nowrap;
+}
+
+code {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--tekst-2);
+  background: var(--povrsina-2);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+@media (max-width: 700px) {
+  .red-zapisa {
+    grid-template-columns: 1fr;
+    row-gap: var(--r-1);
+  }
+
+  .statusi {
+    align-items: flex-start;
+  }
+}

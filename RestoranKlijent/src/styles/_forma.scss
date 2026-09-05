@@ -1,0 +1,106 @@
+@mixin strelica-liste($razmak: 40px, $od-ivice: 14px) {
+  appearance: none;
+  padding-right: $razmak;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%237d7169' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right $od-ivice center;
+  cursor: pointer;
+}
+
+@mixin polja {
+  .polje {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+
+    > span {
+      font-size: 13px;
+      color: var(--tekst-2);
+
+      em {
+        font-style: normal;
+        color: var(--bakar);
+      }
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--pozadina);
+      color: var(--tekst);
+      border: 1px solid var(--ivica);
+      border-radius: var(--zaobljenje);
+      padding: 11px 13px;
+      font-family: inherit;
+      font-size: 15px;
+      width: 100%;
+      transition: border-color 0.15s ease;
+
+      &:hover {
+        border-color: var(--tekst-3);
+      }
+
+      &:focus {
+        border-color: var(--bakar);
+        outline: none;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    select {
+      @include strelica-liste;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    &:has(.greska-polja) input,
+    &:has(.greska-polja) select,
+    &:has(.greska-polja) textarea {
+      border-color: var(--greska);
+    }
+  }
+
+  .greska-polja {
+    color: var(--greska);
+    font-size: 12px;
+  }
+
+  .greska-opsta {
+    margin: 0;
+    padding: var(--r-2) var(--r-3);
+    border-left: 3px solid var(--greska);
+    background: var(--povrsina-2);
+    border-radius: 0 var(--zaobljenje) var(--zaobljenje) 0;
+    color: var(--greska);
+    font-size: 14px;
+  }
+}
+
+@mixin btn-form {
+  background: var(--bakar);
+  color: var(--pozadina);
+  border: 0;
+  width: 100%;
+  padding: 13px 26px;
+  border-radius: var(--zaobljenje);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+}

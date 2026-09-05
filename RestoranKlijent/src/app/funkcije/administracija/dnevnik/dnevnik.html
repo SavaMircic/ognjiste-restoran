@@ -1,0 +1,135 @@
+<div class="prebacivac">
+  <button type="button" [class.aktivan]="prikaz() === 'trag'" (click)="prebaci('trag')">
+    Sve aktivnosti
+  </button>
+  <button type="button" [class.aktivan]="prikaz() === 'mere'" (click)="prebaci('mere')">
+    Mere nad nalozima
+  </button>
+</div>
+
+<p class="napomena">
+  @if (prikaz() === 'trag') {
+    Svaka radnja u aplikaciji ostavlja red ovde — i ona koja je prošla i ona koja je
+    odbijena. Odgovara na pitanje „šta se dešavalo".
+  } @else {
+    Samo mere nad nalozima i moderacija sadržaja, svaka sa razlogom. Odgovara na pitanje
+    „ko je koga, kada i zašto".
+  }
+</p>
+
+<div class="alatka">
+  <div class="filteri">
+    <label class="polje">
+      <span>Pretraga</span>
+      <input
+        type="search"
+        placeholder="npr. petar@test.com"
+        [value]="pretraga()"
+        (input)="pretraga.set($any($event.target).value)"
+      />
+    </label>
+
+    @if (prikaz() === 'trag') {
+      <label class="polje">
+        <span>Slučaj korišćenja</span>
+        <input
+          type="search"
+          placeholder="npr. BlokirajKorisnika"
+          [value]="slucaj()"
+          (input)="slucaj.set($any($event.target).value)"
+        />
+      </label>
+    } @else {
+      <label class="polje">
+        <span>Vrsta mere</span>
+        <select (change)="postaviTip($any($event.target).value)">
+          <option value="">Sve mere</option>
+          @for (t of tipoviAkcija; track t.vrednost) {
+            <option [value]="t.vrednost">{{ t.naziv }}</option>
+          }
+        </select>
+      </label>
+    }
+
+    <label class="polje usko">
+      <span>Od</span>
+      <input type="date" [value]="datumOd()" (change)="postaviDatum('od', $any($event.target).value)" />
+    </label>
+
+    <label class="polje usko">
+      <span>Do</span>
+      <input type="date" [value]="datumDo()" (change)="postaviDatum('do', $any($event.target).value)" />
+    </label>
+  </div>
+
+  @if (prikaz() === 'trag' && !ucitava() && neuspesnih() > 0) {
+    <span class="neuspesnih">{{ neuspesnih() }} odbijenih na ovoj strani</span>
+  }
+</div>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema zapisa za ovaj filter</h3>
+    <p>Promenite pretragu ili opseg datuma.</p>
+  </div>
+} @else {
+  <p class="meta broj-zapisa">Ukupno {{ ukupnoZapisa() }} zapisa</p>
+
+  <div class="lista">
+    @if (prikaz() === 'trag') {
+      @for (t of trag(); track t.id) {
+        <div class="zapis" [class.neuspeh]="!t.uspesnoIzvrseno">
+          <span class="vreme">{{ t.datum | datumS: 'd.M.yyyy. HH:mm:ss' }}</span>
+
+          <div class="podaci">
+            <p class="naslov">{{ t.nazivSlucajaKoriscenja }}</p>
+            <p class="meta">
+              {{ t.korisnikEmail || 'sistem (pozadinski posao)' }}
+              @if (t.poruka) {
+                · {{ t.poruka }}
+              }
+            </p>
+          </div>
+
+          <span class="status" [class]="t.uspesnoIzvrseno ? 'status resena' : 'status odbijena'">
+            {{ t.uspesnoIzvrseno ? 'Uspešno' : 'Odbijeno' }}
+          </span>
+        </div>
+      }
+    } @else {
+      @for (a of mere(); track a.id) {
+        <div class="zapis mera">
+          <span class="vreme">{{ a.datum | datumS: 'd.M.yyyy. HH:mm' }}</span>
+
+          <div class="podaci">
+            <p class="naslov">
+              {{ nazivTipa(a.tipAkcije) }}
+              @if (a.ciljniKorisnikEmail) {
+                <span class="cilj">→ {{ a.ciljniKorisnikEmail }}</span>
+              }
+            </p>
+            <p class="meta">{{ a.opis }}</p>
+          </div>
+
+          <span class="izvrsio">{{ a.administratorIme }}</span>
+        </div>
+      }
+    }
+  </div>
+
+  @if (ukupnoStrana() > 1) {
+    <og-paginacija
+      [strana]="strana()"
+      [ukupnoStrana]="ukupnoStrana()"
+      (promena)="naStranu($event)"
+    />
+  }
+}

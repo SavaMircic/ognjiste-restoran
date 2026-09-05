@@ -1,0 +1,59 @@
+<div class="alatka">
+  <div class="navigacija">
+    <button type="button" class="btn-outline" (click)="prethodna()" aria-label="Prethodna nedelja">‹</button>
+
+    <span class="period">
+      {{ pocetak() | date: 'd. MMM' }} – {{ kraj() | date: 'd. MMM yyyy.' }}
+    </span>
+
+    <button type="button" class="btn-outline" (click)="sledeca()" aria-label="Sledeća nedelja">›</button>
+
+    @if (!jeTekuca()) {
+      <button type="button" class="btn-outline" (click)="naTekucu()">Tekuća nedelja</button>
+    }
+  </div>
+
+  @if (!ucitava() && !greska()) {
+    <span class="zbir">
+      Ukupno <strong>{{ ukupnoSati() }}</strong> h
+    </span>
+  }
+</div>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else {
+  <div class="nedelja">
+    @for (d of dani(); track d.datum) {
+      <div class="dan" [class.danas]="d.jeDanas" [class.prazan]="!d.smene.length">
+        <div class="zaglavlje-dana">
+          <strong>{{ d.naziv }}</strong>
+          <span class="datum">{{ d.datum | datumS: 'd.M.' }}</span>
+        </div>
+
+        @if (d.smene.length) {
+          @for (s of d.smene; track s.id) {
+            <div class="smena" [class.prosla]="s.prosla">
+              <span class="vreme">
+                {{ s.vremePocetka.slice(0, 5) }}–{{ s.vremeKraja.slice(0, 5) }}
+              </span>
+              <span class="trajanje">{{ s.trajanjeSati }} h</span>
+
+              @if (s.prelaziPonoc) {
+                <span class="ponoc" title="Smena se završava sutradan">+1 dan</span>
+              }
+            </div>
+          }
+        } @else {
+          <span class="slobodno">slobodno</span>
+        }
+      </div>
+    }
+  </div>
+}

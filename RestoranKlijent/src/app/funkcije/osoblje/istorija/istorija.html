@@ -1,0 +1,160 @@
+<form class="alatka" [formGroup]="forma" (ngSubmit)="ucitaj()" novalidate>
+  <div class="predlozi">
+    <button type="button" class="btn-outline" (click)="izaberiPredlog(7)">7 dana</button>
+    <button type="button" class="btn-outline" (click)="izaberiPredlog(30)">30 dana</button>
+    <button type="button" class="btn-outline" (click)="izaberiPredlog(90)">90 dana</button>
+  </div>
+
+  <div class="period">
+    <label class="polje">
+      <span>Od</span>
+      <input type="date" formControlName="datumOd" />
+    </label>
+
+    <label class="polje">
+      <span>Do</span>
+      <input type="date" formControlName="datumDo" />
+    </label>
+
+    <button type="submit" class="btn">Prikaži</button>
+  </div>
+</form>
+
+<p class="napomena">
+  Prikazani su i prvi i poslednji dan izabranog perioda. Dan se računa po trenutku kad je
+  posao gotov — sto po vremenu zatvaranja računa, stavka po vremenu kad je pripremljena.
+  Ovde je samo Vaš rad; tuđi računi i pripreme se ne prikazuju.
+</p>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema evidentiranog rada</h3>
+    <p>U izabranom periodu niste zatvorili nijedan sto ni pripremili nijednu stavku.</p>
+  </div>
+} @else {
+  <div class="zbir">
+    @if (imaRacuna()) {
+      <div class="brojka">
+        <span class="oznaka">Zatvorenih stolova</span>
+        <strong>{{ zbir().racuna | number }}</strong>
+      </div>
+      <div class="brojka">
+        <span class="oznaka">Ostvaren promet</span>
+        <strong>{{ zbir().promet | number: '1.0-0' }} <small>RSD</small></strong>
+      </div>
+      <div class="brojka">
+        <span class="oznaka">Napojnica</span>
+        <strong class="istaknuto">{{ zbir().napojnica | number: '1.0-0' }} <small>RSD</small></strong>
+      </div>
+    }
+
+    @if (imaPripreme()) {
+      <div class="brojka">
+        <span class="oznaka">Pripremljenih stavki</span>
+        <strong>{{ zbir().stavki | number }}</strong>
+      </div>
+      <div class="brojka">
+        <span class="oznaka">Vrednost pripremljenog</span>
+        <strong>{{ zbir().vrednostPripreme | number: '1.0-0' }} <small>RSD</small></strong>
+      </div>
+    }
+  </div>
+
+  <div class="dani">
+    @for (d of dani(); track d.datum) {
+      <section class="dan" [class.otvoren]="otvoren(d.datum)">
+        <button
+          type="button"
+          class="zaglavlje-dana"
+          [attr.aria-expanded]="otvoren(d.datum)"
+          (click)="prebaci(d.datum)"
+        >
+          <span class="strelica" aria-hidden="true">{{ otvoren(d.datum) ? '▾' : '▸' }}</span>
+
+          <span class="datum">
+            <strong>{{ d.datum | datumS: 'EEEE' }}</strong>
+            <small>{{ d.datum | datumS: 'd. MMMM yyyy.' }}</small>
+          </span>
+
+          <span class="sazetak">
+            @if (d.brojRacuna) {
+              <span class="komad">{{ racuna(d.brojRacuna) }}</span>
+              <span class="komad iznos">{{ d.prometRacuna | number: '1.0-0' }} RSD</span>
+              @if (d.napojnica) {
+                <span class="komad napojnica">+{{ d.napojnica | number: '1.0-0' }} napojnica</span>
+              }
+            }
+            @if (d.brojPripremljenihStavki) {
+              <span class="komad">{{ stavki(d.brojPripremljenihStavki) }}</span>
+              <span class="komad iznos">{{ d.vrednostPripremljenog | number: '1.0-0' }} RSD</span>
+            }
+          </span>
+        </button>
+
+        @if (otvoren(d.datum)) {
+          <div class="sadrzaj-dana">
+            @if (d.racuni.length) {
+              <h3>Stolovi koje ste zatvorili</h3>
+
+              @for (r of d.racuni; track r.porudzbinaId) {
+                <article class="racun">
+                  <header>
+                    <strong class="sto">Sto {{ r.brojStola }}</strong>
+                    <span class="meta">
+                      {{ r.vremeOtvaranja | datumS: 'HH:mm' }} –
+                      {{ r.vremeZatvaranja | datumS: 'HH:mm' }}
+                      @if (r.nacinPlacanja) {
+                        · {{ r.nacinPlacanja }}
+                      }
+                    </span>
+                    <span class="ukupno">{{ r.ukupno | number: '1.0-0' }} <small>RSD</small></span>
+                  </header>
+
+                  <ul class="stavke">
+                    @for (s of r.stavke; track $index) {
+                      <li>
+                        <span class="kolicina">{{ s.kolicina }}×</span>
+                        <span class="naziv">{{ s.naziv }}</span>
+                        <span class="cena">{{ s.ukupno | number: '1.0-0' }}</span>
+                      </li>
+                    }
+                  </ul>
+
+                  @if (r.napojnica) {
+                    <p class="red-napojnice">
+                      Napojnica <strong>{{ r.napojnica | number: '1.0-0' }} RSD</strong>
+                    </p>
+                  }
+                </article>
+              }
+            }
+
+            @if (d.pripreme.length) {
+              <h3>Stavke koje ste pripremili</h3>
+
+              <ul class="pripreme">
+                @for (p of d.pripreme; track p.stavkaId) {
+                  <li>
+                    <span class="vreme">{{ p.vremeZavrsetka | datumS: 'HH:mm' }}</span>
+                    <span class="kolicina">{{ p.kolicina }}×</span>
+                    <span class="naziv">{{ p.naziv }}</span>
+                    <span class="sto-oznaka">sto {{ p.brojStola }}</span>
+                    <span class="cena">{{ p.vrednost | number: '1.0-0' }}</span>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      </section>
+    }
+  </div>
+}

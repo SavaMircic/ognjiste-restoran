@@ -1,0 +1,15 @@
+.zvezde {
+  display: inline-flex;
+  gap: 1px;
+  font-size: var(--velicina-zvezde, 14px);
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+span {
+  color: var(--ivica);
+}
+
+span.puna {
+  color: var(--zlato);
+}

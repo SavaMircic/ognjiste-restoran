@@ -1,0 +1,19 @@
+<div class="strana">
+  <div class="kartica">
+    <a routerLink="/" class="brend" aria-label="Ognjište — početna">
+      <og-logo [velicina]="46" />
+      <strong>OGNJIŠTE</strong>
+    </a>
+
+    <header>
+      <h1>{{ naslov() }}</h1>
+      @if (podnaslov()) {
+        <p>{{ podnaslov() }}</p>
+      }
+    </header>
+
+    <ng-content />
+  </div>
+
+  <ng-content select="[ispod]" />
+</div>

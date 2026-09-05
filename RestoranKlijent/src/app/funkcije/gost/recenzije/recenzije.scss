@@ -1,0 +1,157 @@
+@use '../../../../styles/forma' as f;
+@use '../../../../styles/tokens' as t;
+
+:host {
+  display: block;
+  padding-bottom: var(--r-5);
+}
+
+.naslovna {
+  background: linear-gradient(180deg, var(--sljiva) 0%, var(--pozadina) 100%);
+  border-bottom: 1px solid var(--ivica);
+  padding: var(--r-6) 0 var(--r-5);
+  margin-bottom: var(--r-5);
+
+  h1 {
+    font-size: clamp(34px, 6vw, 52px);
+    margin: var(--r-1) 0 var(--r-2);
+  }
+
+  p {
+    color: var(--tekst-2);
+    max-width: 56ch;
+    margin: 0;
+  }
+}
+
+.filteri {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.tipovi {
+  display: flex;
+  gap: var(--r-1);
+  flex-wrap: wrap;
+
+  button {
+    background: transparent;
+    border: 1px solid var(--ivica);
+    color: var(--tekst-2);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+
+    &:hover {
+      color: var(--tekst);
+      border-color: var(--tekst-3);
+    }
+
+    &.aktivna {
+      @include t.btn-copper;
+      font-weight: 700;
+    }
+  }
+}
+
+.sortiranje {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  font-size: 13px;
+  color: var(--tekst-3);
+
+  select {
+    @include f.strelica-liste($razmak: 36px, $od-ivice: 12px);
+    background-color: var(--povrsina);
+    color: var(--tekst);
+    border: 1px solid var(--ivica);
+    border-radius: var(--zaobljenje);
+    padding: 8px 12px;
+    padding-right: 36px;
+    font-family: inherit;
+    font-size: 14px;
+  }
+}
+
+.ukupno {
+  color: var(--tekst-3);
+  font-size: 13px;
+  margin: 0 0 var(--r-3);
+}
+
+.lista {
+  display: grid;
+  gap: var(--r-3);
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  align-items: start;
+}
+
+.poruka {
+  text-align: center;
+  padding: var(--r-6) var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje-veliko);
+
+  h3 {
+    margin-bottom: var(--r-2);
+  }
+
+  p {
+    color: var(--tekst-3);
+    margin: 0;
+  }
+
+  &.greska h3 {
+    color: var(--greska);
+  }
+}
+
+.btn-retry {
+  @include t.btn-copper;
+  margin-top: var(--r-3);
+  padding: 10px 22px;
+  border-radius: var(--zaobljenje);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+}
+
+.skeleton {
+  height: 190px;
+  border-radius: var(--zaobljenje-veliko);
+  border: 1px solid var(--ivica);
+  background: linear-gradient(90deg, var(--povrsina) 25%, var(--povrsina-2) 50%, var(--povrsina) 75%);
+  background-size: 200% 100%;
+  animation: talas 1.4s ease-in-out infinite;
+}
+
+@keyframes talas {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

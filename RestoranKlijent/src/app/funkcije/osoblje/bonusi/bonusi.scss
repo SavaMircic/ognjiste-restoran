@@ -1,0 +1,108 @@
+@use '../zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.zbir {
+  display: flex;
+  align-items: baseline;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-left: 3px solid var(--bakar);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+  margin-bottom: var(--r-4);
+
+  .oznaka {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tekst-3);
+  }
+
+  strong {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--bakar);
+
+    small {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--tekst-3);
+    }
+  }
+}
+
+h2 {
+  margin-top: var(--r-3);
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+  margin-bottom: var(--r-3);
+}
+
+.bonus {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--r-3);
+  align-items: center;
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+
+  &:not(.vazi) {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 620px) {
+  .bonus {
+    grid-template-columns: 1fr;
+    gap: var(--r-2);
+  }
+}
+
+.iznos {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 110px;
+
+  strong {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--tekst);
+  }
+
+  small {
+    font-size: 12px;
+    color: var(--tekst-3);
+  }
+}
+
+.bonus.vazi .iznos strong {
+  color: var(--bakar);
+}
+
+.podaci {
+  min-width: 0;
+}
+
+.razlog {
+  margin: 0 0 2px;
+  font-size: 14px;
+  color: var(--tekst-2);
+}

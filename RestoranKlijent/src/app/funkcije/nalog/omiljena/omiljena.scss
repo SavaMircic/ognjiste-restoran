@@ -1,0 +1,69 @@
+@use '../zajednicko' as n;
+
+@include n.nalog;
+
+:host {
+  display: block;
+  padding-bottom: var(--r-6);
+}
+
+.sazetak {
+  color: var(--tekst-3);
+  font-size: 13px;
+  margin: 0 0 var(--r-3);
+}
+
+.grid {
+  display: grid;
+  gap: var(--r-3);
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+}
+
+.container-kartice {
+  position: relative;
+}
+
+.ukloni {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(20, 16, 14, 0.82);
+  border: 1px solid var(--bakar);
+  color: var(--bakar);
+  font-size: 17px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    color: var(--greska);
+    border-color: var(--greska);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.btn-link {
+  display: inline-block;
+  background: var(--bakar);
+  color: var(--pozadina);
+  padding: 11px 24px;
+  border-radius: var(--zaobljenje);
+  font-weight: 700;
+
+  &:hover {
+    text-decoration: none;
+    filter: brightness(1.08);
+  }
+}

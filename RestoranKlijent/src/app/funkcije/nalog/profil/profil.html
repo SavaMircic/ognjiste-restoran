@@ -1,0 +1,145 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (profil(); as p) {
+  <div class="raspored">
+    <aside class="strana">
+      <div class="avatar">
+        @if (p.slikaUrl) {
+          <img [src]="p.slikaUrl | slika" [alt]="p.ime + ' ' + p.prezime" ogRezervna />
+        } @else {
+          <span class="inicijali" aria-hidden="true">{{ inicijali() }}</span>
+        }
+      </div>
+
+      <label class="izbor-slike">
+        <input type="file" accept=".jpg,.jpeg,.png,.webp" (change)="izaberiSliku($event)" [disabled]="saljeSliku()" />
+        <span>{{ saljeSliku() ? 'Otprema se…' : 'Promeni sliku' }}</span>
+      </label>
+
+      <small class="meta">JPG, PNG ili WEBP, do 2 MB.</small>
+
+      @if (greskaSlike()) {
+        <small class="greska-polja">{{ greskaSlike() }}</small>
+      }
+
+      <dl class="meta">
+        <div>
+          <dt>Email</dt>
+          <dd>{{ p.email }}</dd>
+        </div>
+        <div>
+          <dt>Član od</dt>
+          <dd>{{ p.datumRegistracije | datumS: 'd. MMMM yyyy.' }}</dd>
+        </div>
+      </dl>
+
+      <button type="button" class="odjava" (click)="odjavi()">Odjavi se</button>
+    </aside>
+
+    <div class="forme">
+      <section class="kartica">
+        <h2>Lični podaci</h2>
+
+        <form [formGroup]="formaProfila" (ngSubmit)="sacuvajProfil()" novalidate>
+          <div class="red">
+            <label class="polje">
+              <span>Ime <em>*</em></span>
+              <input type="text" formControlName="ime" autocomplete="given-name" maxlength="100" />
+              @if (formaProfila.controls.ime.touched && formaProfila.controls.ime.invalid) {
+                <small class="greska-polja">
+                  {{
+                    formaProfila.controls.ime.getError('server') ??
+                      (formaProfila.controls.ime.hasError('pattern')
+                        ? 'Dozvoljena su samo slova, razmak, crtica i apostrof.'
+                        : 'Ime je obavezno, najmanje dva slova.')
+                  }}
+                </small>
+              }
+            </label>
+
+            <label class="polje">
+              <span>Prezime <em>*</em></span>
+              <input type="text" formControlName="prezime" autocomplete="family-name" maxlength="100" />
+              @if (formaProfila.controls.prezime.touched && formaProfila.controls.prezime.invalid) {
+                <small class="greska-polja">
+                  {{
+                    formaProfila.controls.prezime.getError('server') ??
+                      (formaProfila.controls.prezime.hasError('pattern')
+                        ? 'Dozvoljena su samo slova, razmak, crtica i apostrof.'
+                        : 'Prezime je obavezno, najmanje dva slova.')
+                  }}
+                </small>
+              }
+            </label>
+          </div>
+
+          <label class="polje">
+            <span>Telefon</span>
+            <input type="tel" formControlName="brojTelefona" autocomplete="tel" placeholder="npr. 021 555 123" />
+            @if (formaProfila.controls.brojTelefona.touched && formaProfila.controls.brojTelefona.invalid) {
+              <small class="greska-polja">
+                {{
+                  formaProfila.controls.brojTelefona.getError('server') ??
+                    'Nije ispravan broj. Primeri: 064 123 4567, 021/555-123, +381641234567.'
+                }}
+              </small>
+            }
+          </label>
+
+          <p class="napomena">Email adresa se ne može menjati.</p>
+
+          @if (greskaProfila()) {
+            <p class="greska-opsta">{{ greskaProfila() }}</p>
+          }
+
+          <button type="submit" class="btn" [disabled]="cuvaProfil()">
+            {{ cuvaProfil() ? 'Čuva se…' : 'Sačuvaj izmene' }}
+          </button>
+        </form>
+      </section>
+
+      <section class="kartica">
+        <h2>Promena lozinke</h2>
+
+        <form [formGroup]="formaLozinke" (ngSubmit)="promeniLozinku()" novalidate>
+          <label class="polje">
+            <span>Trenutna lozinka <em>*</em></span>
+            <input type="password" formControlName="staraLozinka" autocomplete="current-password" />
+            @if (formaLozinke.controls.staraLozinka.touched && formaLozinke.controls.staraLozinka.invalid) {
+              <small class="greska-polja">
+                {{ formaLozinke.controls.staraLozinka.getError('server') ?? 'Trenutna lozinka je obavezna.' }}
+              </small>
+            }
+          </label>
+
+          <label class="polje">
+            <span>Nova lozinka <em>*</em></span>
+            <input type="password" formControlName="novaLozinka" autocomplete="new-password" />
+            @if (formaLozinke.controls.novaLozinka.touched && formaLozinke.controls.novaLozinka.invalid) {
+              <small class="greska-polja">
+                {{
+                  formaLozinke.controls.novaLozinka.getError('server') ??
+                    'Najmanje 8 karaktera, jedno veliko slovo i jedan broj.'
+                }}
+              </small>
+            }
+          </label>
+
+          @if (greskaLozinke()) {
+            <p class="greska-opsta">{{ greskaLozinke() }}</p>
+          }
+
+          <button type="submit" class="btn" [disabled]="cuvaLozinku()">
+            {{ cuvaLozinku() ? 'Menja se…' : 'Promeni lozinku' }}
+          </button>
+        </form>
+      </section>
+    </div>
+  </div>
+}

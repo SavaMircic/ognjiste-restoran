@@ -1,0 +1,203 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  margin-bottom: var(--r-3);
+
+  .napomena {
+    max-width: 78ch;
+  }
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+}
+
+.clan {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  align-items: start;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+
+  &.sakriven {
+    opacity: 0.6;
+  }
+}
+
+.foto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--r-1);
+
+  img {
+    width: 88px;
+    height: 88px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid var(--ivica);
+  }
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+
+  input[type='file'] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.sitna-veza {
+  font-size: 11px;
+  color: var(--bakar);
+  border-bottom: 1px solid transparent;
+
+  &:hover {
+    border-bottom-color: var(--bakar);
+  }
+}
+
+.ime {
+  margin: 0 0 var(--r-1);
+  font-size: 16px;
+  color: var(--tekst);
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.pozicija {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bakar);
+  border: 1px solid var(--bakar);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.biografija {
+  margin: 0 0 var(--r-1);
+  font-size: 14px;
+  color: var(--tekst-2);
+  line-height: 1.55;
+  max-width: 72ch;
+}
+
+.podaci .meta {
+  margin: 0;
+}
+
+.bez {
+  font-style: italic;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+  margin-top: var(--r-2);
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px;
+  gap: var(--r-3);
+}
+
+.usko {
+  max-width: 120px;
+}
+
+.prekidac-polje {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  font-size: 13px;
+  color: var(--tekst-2);
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--bakar);
+    cursor: pointer;
+  }
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.prekidac {
+  background: transparent;
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  color: var(--tekst-3);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    border-color: var(--bakar);
+    color: var(--tekst-2);
+  }
+
+  &.ukljucen {
+    border-color: var(--uspeh);
+    color: var(--uspeh);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+@media (max-width: 860px) {
+  .clan {
+    grid-template-columns: 88px 1fr;
+    row-gap: var(--r-2);
+  }
+
+  .clan > .akcije {
+    grid-column: 1 / -1;
+  }
+
+  .red {
+    grid-template-columns: 1fr;
+  }
+}

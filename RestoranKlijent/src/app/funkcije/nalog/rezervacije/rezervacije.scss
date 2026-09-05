@@ -1,0 +1,160 @@
+@use '../zajednicko' as n;
+
+@include n.nalog;
+
+:host {
+  display: block;
+  padding-bottom: var(--r-6);
+}
+
+.sazetak {
+  color: var(--tekst-3);
+  font-size: 13px;
+  margin: 0 0 var(--r-3);
+
+  strong {
+    color: var(--tekst-2);
+  }
+}
+
+.naslov-grupe {
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tekst-3);
+  font-family: var(--pismo-telo);
+  font-weight: 600;
+  margin: var(--r-4) 0 var(--r-2);
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+}
+
+.stavka {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--r-3);
+  align-items: center;
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje-veliko);
+  padding: var(--r-3);
+
+  &.aktivna {
+    border-left: 3px solid var(--bakar);
+  }
+}
+
+@media (max-width: 640px) {
+  .stavka {
+    grid-template-columns: 1fr;
+    gap: var(--r-2);
+  }
+}
+
+.kod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--r-2) var(--r-3);
+  background: var(--pozadina);
+  border: 1px dashed var(--ivica);
+  border-radius: var(--zaobljenje);
+  min-width: 118px;
+
+  .oznaka-kod {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tekst-3);
+  }
+
+  strong {
+    font-family: var(--pismo-naslov);
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    color: var(--zlato);
+  }
+}
+
+.podaci {
+  min-width: 0;
+}
+
+.vrh {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+  margin-bottom: 3px;
+}
+
+.termin {
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.detalj {
+  margin: 0;
+  color: var(--tekst-3);
+  font-size: 13px;
+
+  &.meta {
+    font-size: 12px;
+  }
+}
+
+.status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid currentcolor;
+  color: var(--tekst-3);
+
+  &.aktivna {
+    color: var(--u-toku);
+  }
+
+  &.realizovana {
+    color: var(--uspeh);
+  }
+
+  &.istekla {
+    color: var(--upozorenje);
+  }
+
+  &.otkazana {
+    color: var(--greska);
+  }
+}
+
+.akcija {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 130px;
+}
+
+.btn-link {
+  display: inline-block;
+  background: var(--bakar);
+  color: var(--pozadina);
+  padding: 11px 24px;
+  border-radius: var(--zaobljenje);
+  font-weight: 700;
+
+  &:hover {
+    text-decoration: none;
+    filter: brightness(1.08);
+  }
+}

@@ -1,0 +1,31 @@
+@if (ukupnoStrana() > 1) {
+  <nav class="paginacija" aria-label="Prelistavanje">
+    <button type="button" [disabled]="strana() === 1" (click)="idi(strana() - 1)" aria-label="Prethodna strana">
+      ‹
+    </button>
+
+    @for (s of brojevi(); track $index) {
+      @if (s === null) {
+        <span class="tackice" aria-hidden="true">…</span>
+      } @else {
+        <button
+          type="button"
+          [class.aktivna]="s === strana()"
+          [attr.aria-current]="s === strana() ? 'page' : null"
+          (click)="idi(s)"
+        >
+          {{ s }}
+        </button>
+      }
+    }
+
+    <button
+      type="button"
+      [disabled]="strana() === ukupnoStrana()"
+      (click)="idi(strana() + 1)"
+      aria-label="Sledeća strana"
+    >
+      ›
+    </button>
+  </nav>
+}

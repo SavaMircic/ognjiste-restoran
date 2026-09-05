@@ -1,0 +1,30 @@
+<div class="zatamnjenje" (click)="odgovor.emit(false)">
+  <div
+    class="okvir"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="potvrda-naslov"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 id="potvrda-naslov">{{ sadrzaj().naslov }}</h2>
+
+    @if (sadrzaj().tekst) {
+      <p>{{ sadrzaj().tekst }}</p>
+    }
+
+    <div class="dugmad">
+      <button type="button" class="odustani" (click)="odgovor.emit(false)">
+        {{ sadrzaj().odustani }}
+      </button>
+      <button
+        #potvrdi
+        type="button"
+        class="potvrdi"
+        [class.opasno]="sadrzaj().opasno"
+        (click)="odgovor.emit(true)"
+      >
+        {{ sadrzaj().potvrdi }}
+      </button>
+    </div>
+  </div>
+</div>

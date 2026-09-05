@@ -1,0 +1,165 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.dodavanje {
+  margin-bottom: var(--r-4);
+
+  .meta {
+    margin: 0;
+  }
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--r-3);
+  align-items: end;
+}
+
+.red-uzi {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+
+  .polje {
+    max-width: 110px;
+  }
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+
+  input[type='file'] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--r-2);
+}
+
+.slika {
+  margin: 0;
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+  }
+
+  &.sakrivena img {
+    opacity: 0.4;
+    filter: grayscale(1);
+  }
+
+  figcaption {
+    padding: var(--r-2) var(--r-3) var(--r-3);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.naslov {
+  margin: 0;
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.slika .meta {
+  margin: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+}
+
+.prekidac-polje {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  font-size: 13px;
+  color: var(--tekst-2);
+  cursor: pointer;
+  padding-bottom: 10px;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--bakar);
+    cursor: pointer;
+  }
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+  margin-top: var(--r-1);
+}
+
+.prekidac {
+  background: transparent;
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  color: var(--tekst-3);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    border-color: var(--bakar);
+    color: var(--tekst-2);
+  }
+
+  &.ukljucen {
+    border-color: var(--uspeh);
+    color: var(--uspeh);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+@media (max-width: 800px) {
+  .red {
+    grid-template-columns: 1fr;
+  }
+}

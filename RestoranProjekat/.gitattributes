@@ -1,0 +1,20 @@
+# Normalizuje prelome redova u repozitorijumu na LF, a u radnoj kopiji na CRLF (Windows).
+# Bez ovoga git na svakom commit-u javlja "LF will be replaced by CRLF".
+* text=auto
+
+# Izvorni kod
+*.cs        text diff=csharp
+*.csproj    text
+*.slnx      text
+*.json      text
+*.md        text
+*.yml       text
+*.gitignore text
+
+# Binarni sadrzaj - nikad ne dirati
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.ico  binary
+*.pdf  binary

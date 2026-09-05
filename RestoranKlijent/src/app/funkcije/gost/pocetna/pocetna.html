@@ -1,0 +1,178 @@
+<section class="hero">
+  <div class="container content">
+    <span class="eyebrow">Novi Sad · domaća kuhinja</span>
+    <h1>Ognjište</h1>
+    <p class="uvod">
+      Roštilj ide na žar tek kad poručite, čorba se kuva od jutros, a bašta radi dok je toplo.
+    </p>
+
+    <div class="akcije">
+      <a routerLink="/meni" class="btn-primary">Pogledaj meni</a>
+      <a routerLink="/rezervacija" class="btn-secondary">Rezerviši sto</a>
+    </div>
+
+    @if (postavke(); as p) {
+      <p class="radno-vreme">{{ p.radnoVreme }}</p>
+    }
+  </div>
+</section>
+
+<section class="container sekcija">
+  <header class="section-header">
+    <div>
+      <span class="eyebrow">Najbolje ocenjeno</span>
+      <h2>Izdvajamo iz kuhinje</h2>
+    </div>
+    <a routerLink="/meni" class="veza-vise">Cela karta →</a>
+  </header>
+
+  @if (ucitavaJela()) {
+    <div class="grid-jela">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton jelo"></div>
+      }
+    </div>
+  } @else if (izdvojena().length) {
+    <div class="grid-jela">
+      @for (jelo of izdvojena(); track jelo.id) {
+        <og-kartica-jela [jelo]="jelo" />
+      }
+    </div>
+  } @else {
+    <p class="prazno">Meni trenutno nije dostupan.</p>
+  }
+</section>
+
+@if (postavke(); as p) {
+  <section class="o-nama">
+    <div class="container content-o-nama">
+      <div>
+        <span class="eyebrow">O restoranu</span>
+        <h2>Sto za kojim se ostaje</h2>
+        <p>{{ p.opisRestorana }}</p>
+      </div>
+
+      <dl class="podaci">
+        <div>
+          <dt>Adresa</dt>
+          <dd>{{ p.adresa }}</dd>
+        </div>
+        <div>
+          <dt>Telefon</dt>
+          <dd><a [href]="'tel:' + p.telefon">{{ p.telefon }}</a></dd>
+        </div>
+        <div>
+          <dt>Radno vreme</dt>
+          <dd>{{ p.radnoVreme }}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+}
+
+@if (oblasti().length) {
+  <section class="container sekcija">
+    <header class="section-header">
+      <div>
+        <span class="eyebrow">Kod nas</span>
+        <h2>Ambijent</h2>
+      </div>
+      <a routerLink="/galerija" class="veza-vise">Cela galerija →</a>
+    </header>
+
+    <div class="grid-galerija">
+      @for (o of oblasti(); track o.naziv) {
+        <button
+          type="button"
+          class="plocica-oblasti"
+          (click)="otvoriOblast(o.naziv)"
+          [attr.aria-label]="
+            'Otvori oblast ' + o.naziv + ', ' + saBrojem(o.slike.length, 'slika', 'slike', 'slika')
+          "
+        >
+          <img
+            [src]="o.naslovna.slikaUrl | slika"
+            [alt]="o.naslovna.opis ?? o.naziv"
+            loading="lazy"
+            ogRezervna
+          />
+          <span class="natpis">
+            <strong>{{ o.naziv }}</strong>
+            <small>{{ saBrojem(o.slike.length, 'slika', 'slike', 'slika') }}</small>
+          </span>
+        </button>
+      }
+    </div>
+  </section>
+}
+
+@if (tim().length) {
+  <section class="tim">
+    <div class="container">
+      <header class="section-header">
+        <div>
+          <span class="eyebrow">Ljudi iza kuhinje</span>
+          <h2>Ko vas dočekuje</h2>
+        </div>
+        <a routerLink="/nas-tim" class="veza-vise">Ceo tim →</a>
+      </header>
+
+      <div class="grid-tima">
+        @for (c of tim(); track c.ime + c.prezime) {
+          <article class="clan">
+            <div class="portret">
+              @if (c.slikaUrl) {
+                <img [src]="c.slikaUrl | slika" [alt]="c.ime + ' ' + c.prezime" loading="lazy" ogRezervna />
+              } @else {
+                <span class="inicijali" aria-hidden="true">{{ inicijali(c) }}</span>
+              }
+            </div>
+
+            <h3>{{ c.ime }} {{ c.prezime }}</h3>
+            <span class="uloga">{{ nazivUloge(c.uloga) }}</span>
+
+            @if (c.biografija) {
+              <p class="bio">{{ c.biografija }}</p>
+            }
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+@if (recenzije().length) {
+  <section class="sekcija recenzije">
+    <div class="container">
+      <header class="section-header">
+        <div>
+          <span class="eyebrow">Utisci gostiju</span>
+          <h2>Šta kažu o nama</h2>
+        </div>
+        <a routerLink="/recenzije" class="veza-vise">Sve recenzije →</a>
+      </header>
+    </div>
+
+    <div class="traka-okvir">
+      <div class="traka" [style.--broj-kartica]="recenzije().length">
+        @for (r of udvojene(); track $index; let i = $index) {
+          <div class="kartica-u-traci" [attr.aria-hidden]="i >= recenzije().length ? 'true' : null">
+            <og-kartica-recenzije [recenzija]="r" />
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<section class="poziv">
+  <div class="container">
+    <h2>Rezervišite sto</h2>
+    <p>Izaberite datum, vreme i broj gostiju — kod rezervacije stiže odmah, i na mejl.</p>
+    <a routerLink="/rezervacija" class="btn-primary">Rezerviši sto</a>
+  </div>
+</section>
+
+@if (oblast(); as o) {
+  <og-galerija-slajder [oblast]="o" (zatvoreno)="zatvoriOblast()" />
+}

@@ -1,0 +1,63 @@
+:root {
+  --pozadina: #14100e;
+  --povrsina: #1f1a17;
+  --povrsina-2: #2a2320;
+  --ivica: #3a322d;
+
+  --bakar: #c2703d;
+  --sljiva: #4a2c34;
+  --zlato: #d4af6a;
+
+  --tekst: #f2ebe3;
+  --tekst-2: #b3a79c;
+  --tekst-3: #7d7169;
+
+  --uspeh: #4e9f6e;
+  --u-toku: #4a8db7;
+  --upozorenje: #e8b931;
+  --greska: #e0605a;
+
+  --pismo-naslov: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --pismo-telo: Roboto, 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-3: 16px;
+  --r-4: 24px;
+  --r-5: 40px;
+  --r-6: 64px;
+
+  --zaobljenje: 10px;
+  --zaobljenje-veliko: 14px;
+  --senka: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+@mixin btn-copper {
+  background: var(--bakar);
+  color: var(--pozadina);
+  border: 0;
+}
+
+@mixin btn-gold-outline {
+  background: transparent;
+  color: var(--zlato);
+  border: 1px solid var(--zlato);
+}
+
+@mixin dugme-osnova($visina: 46px, $vodoravno: 24px) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: $visina;
+  padding: 0 $vodoravno;
+  border-radius: var(--zaobljenje);
+  font-family: inherit;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

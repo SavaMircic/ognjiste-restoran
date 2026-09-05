@@ -1,0 +1,144 @@
+<div class="alatka">
+  <div class="filteri">
+    <label class="polje">
+      <span>Tip recenzije</span>
+      <select (change)="filtrirajTip($any($event.target).value)">
+        <option value="">Sve recenzije</option>
+        @for (t of tipovi; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="prekidac-polje">
+      <input
+        type="checkbox"
+        [checked]="samoBezOdgovora()"
+        (change)="samoBezOdgovora.set($any($event.target).checked)"
+      />
+      <span>Samo bez odgovora ({{ bezOdgovoraNaStrani() }} na ovoj strani)</span>
+    </label>
+  </div>
+</div>
+
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Nema recenzija za ovaj filter</h3>
+    <p>Promenite tip ili isključite filter „samo bez odgovora".</p>
+  </div>
+} @else {
+  <p class="meta broj-zapisa">Ukupno {{ ukupnoZapisa() }} aktivnih recenzija</p>
+
+  <div class="lista">
+    @for (r of recenzije(); track r.id) {
+      <article class="recenzija" [class.bez-odgovora]="!r.odgovorRestorana">
+        <div class="vrh">
+          <span class="ocena">{{ zvezdice(r.ocena) }}</span>
+          <span class="tip">
+            {{ r.tipRecenzije }}
+            @if (r.nazivStavke) {
+              · {{ r.nazivStavke }}
+            }
+          </span>
+          <span class="meta">
+            {{ r.autorIme }} · {{ r.datumKreiranja | datumS: 'd.M.yyyy.' }}
+            @if (r.datumIzmene) {
+              · izmenjena
+            }
+          </span>
+        </div>
+
+        @if (r.naslov) {
+          <p class="naslov">{{ r.naslov }}</p>
+        }
+        <p class="tekst">{{ r.tekst }}</p>
+
+        @if (r.odgovorRestorana) {
+          <div class="odgovor">
+            <span class="oznaka-odgovor">Odgovor restorana</span>
+            <p>{{ r.odgovorRestorana }}</p>
+            <span class="meta">{{ r.datumOdgovora | datumS: 'd.M.yyyy.' }}</span>
+          </div>
+        }
+
+        @if (odgovaram() === r.id) {
+          <form class="panel" [formGroup]="forma" (ngSubmit)="posaljiOdgovor()">
+            @if (greskaForme()) {
+              <p class="greska-opsta">{{ greskaForme() }}</p>
+            }
+
+            <label class="polje">
+              <span>Odgovor restorana <em>*</em></span>
+              <textarea formControlName="odgovorRestorana" rows="3" maxlength="1000"></textarea>
+              @if (forma.controls.odgovorRestorana.touched && forma.controls.odgovorRestorana.invalid) {
+                <span class="greska-polja">
+                  {{ forma.controls.odgovorRestorana.getError('server') ?? 'Odgovor je obavezan.' }}
+                </span>
+              }
+            </label>
+
+            <div class="akcije">
+              <button type="submit" class="btn" [disabled]="salje()">
+                {{ salje() ? 'Objavljuje se…' : 'Objavi odgovor' }}
+              </button>
+              <button type="button" class="btn-outline" (click)="zatvoriOdgovor()">Odustani</button>
+              <span class="napomena">Odgovor je javan i stoji ispod recenzije.</span>
+            </div>
+          </form>
+        } @else if (uklanjam() === r.id) {
+          <form class="panel opasan" [formGroup]="formaUklanjanja" (ngSubmit)="potvrdiUklanjanje()">
+            @if (greskaForme()) {
+              <p class="greska-opsta">{{ greskaForme() }}</p>
+            }
+
+            <label class="polje">
+              <span>Razlog uklanjanja <em>*</em></span>
+              <input type="text" formControlName="razlog" maxlength="500" />
+              @if (formaUklanjanja.controls.razlog.touched && formaUklanjanja.controls.razlog.invalid) {
+                <span class="greska-polja">
+                  {{ formaUklanjanja.controls.razlog.getError('server') ?? 'Razlog je obavezan.' }}
+                </span>
+              }
+            </label>
+
+            <div class="akcije">
+              <button type="submit" class="btn" [disabled]="salje()">
+                {{ salje() ? 'Uklanja se…' : 'Ukloni recenziju' }}
+              </button>
+              <button type="button" class="btn-outline" (click)="zatvoriUklanjanje()">Odustani</button>
+              <span class="napomena">
+                Recenzija nestaje sa sajta, ali ostaje u istoriji autora. Razlog se upisuje
+                u log admin akcija.
+              </span>
+            </div>
+          </form>
+        } @else {
+          <div class="akcije">
+            <button type="button" class="btn-outline" (click)="otvoriOdgovor(r)">
+              {{ r.odgovorRestorana ? 'Izmeni odgovor' : 'Odgovori' }}
+            </button>
+            <button type="button" class="btn-outline danger" (click)="otvoriUklanjanje(r)">
+              Ukloni
+            </button>
+          </div>
+        }
+      </article>
+    }
+  </div>
+
+  @if (ukupnoStrana() > 1) {
+    <og-paginacija
+      [strana]="strana()"
+      [ukupnoStrana]="ukupnoStrana()"
+      (promena)="naStranu($event)"
+    />
+  }
+}

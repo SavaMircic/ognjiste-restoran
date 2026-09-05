@@ -1,0 +1,139 @@
+@use '../zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.navigacija {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+}
+
+.period {
+  font-size: 15px;
+  color: var(--tekst);
+  min-width: 190px;
+  text-align: center;
+}
+
+.zbir {
+  font-size: 13px;
+  color: var(--tekst-3);
+
+  strong {
+    color: var(--bakar);
+    font-size: 16px;
+  }
+}
+
+.nedelja {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--r-1);
+}
+
+@media (max-width: 1000px) {
+  .nedelja {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .nedelja {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dan {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2);
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.prazan {
+    background: transparent;
+  }
+
+  &.danas {
+    border-color: var(--bakar);
+    background: var(--povrsina-2);
+  }
+}
+
+.zaglavlje-dana {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--ivica);
+
+  strong {
+    font-size: 12px;
+    color: var(--tekst-2);
+  }
+}
+
+.datum {
+  font-size: 11px;
+  color: var(--tekst-3);
+}
+
+.smena {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: var(--povrsina-2);
+  border-left: 3px solid var(--bakar);
+  border-radius: 0 4px 4px 0;
+  padding: 6px 8px;
+
+  &.prosla {
+    border-left-color: var(--ivica);
+    opacity: 0.6;
+  }
+}
+
+.vreme {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tekst);
+}
+
+.trajanje {
+  font-size: 11px;
+  color: var(--tekst-3);
+}
+
+.ponoc {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--u-toku);
+  border: 1px solid var(--u-toku);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+.slobodno {
+  font-size: 12px;
+  color: var(--tekst-3);
+  font-style: italic;
+  margin: auto 0;
+}

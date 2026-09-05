@@ -1,0 +1,133 @@
+@use '../../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.zaglavlje {
+  margin-bottom: var(--r-3);
+  padding-bottom: var(--r-3);
+  border-bottom: 1px solid var(--ivica);
+
+  h1 {
+    font-family: var(--pismo-telo);
+    font-size: 24px;
+    margin: 2px 0 4px;
+  }
+
+  .meta {
+    margin: 0;
+  }
+}
+
+.nazad {
+  font-size: 13px;
+  color: var(--tekst-3);
+}
+
+.napomena {
+  max-width: 82ch;
+  margin-bottom: var(--r-3);
+
+  strong {
+    color: var(--tekst-2);
+  }
+}
+
+.forma {
+  margin-bottom: var(--r-4);
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 220px auto;
+  gap: var(--r-3);
+  align-items: end;
+}
+
+.sa-jedicom,
+.sa-jedinicom {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+
+  input {
+    flex: 1;
+  }
+}
+
+.jedinica {
+  font-size: 13px;
+  color: var(--tekst-3);
+  white-space: nowrap;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+}
+
+.sastojak {
+  display: grid;
+  grid-template-columns: 1fr 160px auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+}
+
+.naziv {
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.kolicina {
+  font-variant-numeric: tabular-nums;
+  color: var(--tekst-2);
+  font-size: 14px;
+
+  strong {
+    font-size: 16px;
+    color: var(--tekst);
+  }
+}
+
+.izmena {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+
+  input {
+    background: var(--pozadina);
+    color: var(--tekst);
+    border: 1px solid var(--bakar);
+    border-radius: var(--zaobljenje);
+    padding: 7px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    width: 100px;
+  }
+}
+
+.akcije {
+  display: flex;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 800px) {
+  .red,
+  .sastojak {
+    grid-template-columns: 1fr;
+  }
+
+  .akcije {
+    justify-content: flex-start;
+  }
+}

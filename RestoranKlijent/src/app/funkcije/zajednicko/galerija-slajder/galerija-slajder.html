@@ -1,0 +1,60 @@
+<div
+  class="svetlo"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="oblast().naziv"
+  (click)="zatvoreno.emit()"
+>
+  <button type="button" class="zatvori" (click)="zatvoreno.emit()" aria-label="Zatvori">✕</button>
+
+  @if (oblast().slike.length > 1) {
+    <button
+      type="button"
+      class="strelica levo"
+      (click)="pomeri(-1); $event.stopPropagation()"
+      aria-label="Prethodna slika"
+    >
+      ‹
+    </button>
+    <button
+      type="button"
+      class="strelica desno"
+      (click)="pomeri(1); $event.stopPropagation()"
+      aria-label="Sledeća slika"
+    >
+      ›
+    </button>
+  }
+
+  @if (slika(); as s) {
+    <figure class="okvir" (click)="$event.stopPropagation()">
+      <img [src]="s.slikaUrl | slika" [alt]="s.opis ?? s.naslov" ogRezervna />
+
+      <figcaption>
+        <span class="oblast-naziv">{{ oblast().naziv }}</span>
+        <strong>{{ s.naslov }}</strong>
+        @if (s.opis) {
+          <span>{{ s.opis }}</span>
+        }
+        <small>{{ indeks() + 1 }} / {{ oblast().slike.length }}</small>
+      </figcaption>
+
+      @if (oblast().slike.length > 1) {
+        <div class="slicice">
+          @for (t of oblast().slike; track t.id; let i = $index) {
+            <button
+              type="button"
+              class="slicica"
+              [class.tekuca]="i === indeks()"
+              (click)="naSlicicu(i)"
+              [attr.aria-label]="'Slika ' + (i + 1) + ': ' + t.naslov"
+              [attr.aria-current]="i === indeks() ? 'true' : null"
+            >
+              <img [src]="t.slikaUrl | slika" [alt]="t.naslov" ogRezervna />
+            </button>
+          }
+        </div>
+      }
+    </figure>
+  }
+</div>

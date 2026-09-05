@@ -1,0 +1,56 @@
+<footer class="footer" [class.radni]="auth.radniRezim()">
+  @if (auth.radniRezim()) {
+    <div class="container meta">
+      <span>&copy; {{ godina }} Ognjište</span>
+      <span>{{ auth.punoIme() }}</span>
+    </div>
+  } @else {
+    <div class="container content">
+      <div class="kolona">
+        <a routerLink="/" class="brend">
+          <og-logo [velicina]="36" />
+          <strong>OGNJIŠTE</strong>
+        </a>
+        @if (postavke(); as p) {
+          <p>{{ p.opisRestorana }}</p>
+
+          @if (p.facebookUrl || p.instagramUrl) {
+            <div class="mreze">
+              @if (p.facebookUrl) {
+                <a [href]="p.facebookUrl" target="_blank" rel="noopener noreferrer">Facebook</a>
+              }
+              @if (p.instagramUrl) {
+                <a [href]="p.instagramUrl" target="_blank" rel="noopener noreferrer">Instagram</a>
+              }
+            </div>
+          }
+        }
+      </div>
+
+      <div class="kolona">
+        <h4>Restoran</h4>
+        <a routerLink="/meni">Meni</a>
+        <a routerLink="/recenzije">Recenzije</a>
+        <a routerLink="/galerija">Galerija</a>
+        <a routerLink="/nas-tim">Naš tim</a>
+        <a routerLink="/rezervacija">Rezervacija</a>
+      </div>
+
+      <div class="kolona">
+        <h4>Kontakt</h4>
+        @if (postavke(); as p) {
+          <span>{{ p.adresa }}</span>
+          <a [href]="'tel:' + p.telefon">{{ p.telefon }}</a>
+          <a [href]="'mailto:' + p.email">{{ p.email }}</a>
+          <span class="radno">{{ p.radnoVreme }}</span>
+        }
+        <a routerLink="/kontakt">Kontakt forma</a>
+      </div>
+    </div>
+
+    <div class="container meta">
+      <span>&copy; {{ godina }} Ognjište</span>
+      <span>Diplomski rad</span>
+    </div>
+  }
+</footer>

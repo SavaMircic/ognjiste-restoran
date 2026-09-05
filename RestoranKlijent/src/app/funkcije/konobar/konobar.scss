@@ -1,0 +1,16 @@
+@use '../osoblje/zajednicko' as o;
+
+@include o.radna-traka;
+
+.veza {
+  font-size: 12px;
+  color: var(--tekst-3);
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  padding: 4px 12px;
+
+  &.pada {
+    color: var(--greska);
+    border-color: var(--greska);
+  }
+}

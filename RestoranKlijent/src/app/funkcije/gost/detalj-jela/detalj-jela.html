@@ -1,0 +1,190 @@
+@if (ucitava()) {
+  <div class="container skeleton-strana">
+    <div class="skeleton velika"></div>
+    <div class="skeleton tekst"></div>
+  </div>
+} @else if (greska()) {
+  <div class="container poruka greska">
+    <span class="eyebrow">Greška</span>
+    <h1>Jelo nije prikazano</h1>
+    <p>{{ greska() }}</p>
+    <a routerLink="/meni" class="btn">Nazad na meni</a>
+  </div>
+} @else if (jelo(); as j) {
+  <div class="container">
+    <nav class="putanja" aria-label="Putanja">
+      <a routerLink="/meni">Meni</a>
+      <span aria-hidden="true">›</span>
+      <span>{{ j.kategorijaNaziv }}</span>
+    </nav>
+
+    <div class="raspored">
+      <div class="galerija">
+        <div class="velika">
+          @if (velikaSlika(); as vs) {
+            <img [src]="vs.url | slika" [alt]="vs.opis" ogRezervna />
+          }
+
+          @if (j.popust) {
+            <span class="znacka popust">−{{ j.popust }}%</span>
+          }
+          @if (!j.dostupno) {
+            <span class="znacka rasprodato">Trenutno nema</span>
+          }
+        </div>
+
+        @if (sveSlike().length > 1) {
+          <div class="slicice" role="tablist" aria-label="Slike jela">
+            @for (s of sveSlike(); track $index) {
+              <button
+                type="button"
+                role="tab"
+                [class.aktivna]="izabranaSlika() === $index - 1"
+                [attr.aria-selected]="izabranaSlika() === $index - 1"
+                [attr.aria-label]="s.opis"
+                (click)="izaberi($index - 1)"
+              >
+                <img [src]="s.url | slika" [alt]="s.opis" loading="lazy" ogRezervna />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="podaci">
+        <span class="eyebrow">{{ j.kategorijaNaziv }}</span>
+        <h1>{{ j.naziv }}</h1>
+
+        <div class="ocena">
+          @if (j.prosecnaOcena !== null) {
+            <og-zvezdice [ocena]="j.prosecnaOcena" />
+            <span class="broj">{{ j.prosecnaOcena | number: '1.1-1' }}</span>
+            <span class="meta">/ {{ j.brojRecenzija }} recenzija</span>
+          } @else {
+            <span class="meta">Još nema recenzija za ovo jelo</span>
+          }
+
+          @if (j.brojLajkova > 0) {
+            <span class="lajkovi">♥ {{ j.brojLajkova }}</span>
+          }
+        </div>
+
+        <p class="opis">{{ j.opis }}</p>
+
+        @if (j.detaljanOpis) {
+          <div class="opis-detaljni">
+            <h2>O jelu</h2>
+            <p>{{ j.detaljanOpis }}</p>
+          </div>
+        }
+
+        <div class="cene">
+          <span class="cena">{{ j.cenaSaPopustom | number: '1.0-0' }} RSD</span>
+          @if (imaPopust()) {
+            <span class="stara">{{ j.cena | number: '1.0-0' }} RSD</span>
+            <span class="usteda">ušteda {{ j.cena - j.cenaSaPopustom | number: '1.0-0' }} RSD</span>
+          }
+        </div>
+
+        @if (j.dostupno) {
+          <p class="stanje dostupno">✓ Dostupno danas</p>
+        } @else {
+          <p class="stanje nema">Trenutno nije u ponudi</p>
+        }
+
+        <div class="radnje">
+          <a routerLink="/rezervacija" class="btn-primary">Rezerviši sto</a>
+
+          @if (jeKorisnik()) {
+            <button
+              type="button"
+              class="lajk"
+              [class.aktivan]="lajkovano()"
+              [disabled]="menjaLajk()"
+              [attr.aria-pressed]="lajkovano()"
+              (click)="prebaciLajk()"
+            >
+              ♥ {{ lajkovano() ? 'U omiljenima' : 'Dodaj u omiljena' }}
+            </button>
+          }
+        </div>
+
+        @if (!auth.prijavljen()) {
+          <p class="napomena">
+            Da biste ocenili ovo jelo ili ga sačuvali među omiljena,
+            <a routerLink="/prijava" [queryParams]="{ povratak: '/meni/' + j.id }">prijavite se</a>.
+          </p>
+        }
+      </div>
+    </div>
+
+    <section class="recenzije-sekcija">
+      <div class="zaglavlje-recenzija">
+        <h2>Recenzije gostiju</h2>
+
+        @if (jeKorisnik() && !pisemRecenziju()) {
+          <button type="button" class="btn-outline" (click)="zapocniRecenziju()">
+            {{ mojaRecenzija() ? 'Izmeni svoju recenziju' : 'Napiši recenziju' }}
+          </button>
+        }
+      </div>
+
+      @if (pisemRecenziju()) {
+        <form class="forma-recenzije" [formGroup]="formaRecenzije" (ngSubmit)="sacuvajRecenziju()" novalidate>
+          <div class="polje">
+            <span>Ocena <em>*</em></span>
+            <div class="izbor-ocene" role="radiogroup" aria-label="Ocena">
+              @for (o of [1, 2, 3, 4, 5]; track o) {
+                <button
+                  type="button"
+                  role="radio"
+                  [attr.aria-checked]="formaRecenzije.controls.ocena.value === o"
+                  [attr.aria-label]="o + ' od 5'"
+                  [class.puna]="o <= formaRecenzije.controls.ocena.value"
+                  (click)="postaviOcenu(o)"
+                >
+                  ★
+                </button>
+              }
+              <span class="broj-ocene">{{ formaRecenzije.controls.ocena.value }} / 5</span>
+            </div>
+          </div>
+
+          <label class="polje">
+            <span>Naslov</span>
+            <input type="text" formControlName="naslov" maxlength="150" placeholder="opciono" />
+          </label>
+
+          <label class="polje">
+            <span>Tekst <em>*</em></span>
+            <textarea formControlName="tekst" rows="4" maxlength="2000"></textarea>
+            @if (formaRecenzije.controls.tekst.touched && formaRecenzije.controls.tekst.invalid) {
+              <small class="greska-polja">Tekst recenzije je obavezan.</small>
+            }
+          </label>
+
+          @if (greskaRecenzije()) {
+            <p class="greska-opsta">{{ greskaRecenzije() }}</p>
+          }
+
+          <div class="akcije-forme">
+            <button type="submit" class="btn-primary" [disabled]="cuvaRecenziju()">
+              {{ cuvaRecenziju() ? 'Čuva se…' : 'Objavi' }}
+            </button>
+            <button type="button" class="btn-outline" (click)="odustaniOdRecenzije()">Odustani</button>
+          </div>
+        </form>
+      }
+
+      @if (recenzije().length) {
+        <div class="lista-recenzija">
+          @for (r of recenzije(); track r.id) {
+            <og-kartica-recenzije [recenzija]="r" [prikaziJelo]="false" />
+          }
+        </div>
+      } @else {
+        <p class="prazno">Ovo jelo još nema nijednu recenziju. Budite prvi kad nas posetite.</p>
+      }
+    </section>
+  </div>
+}

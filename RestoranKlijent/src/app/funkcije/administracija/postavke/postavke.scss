@@ -1,0 +1,38 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.forma {
+  max-width: 900px;
+
+  .napomena {
+    max-width: 70ch;
+  }
+
+  .meta {
+    margin: 0;
+  }
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--r-3);
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+  .red {
+    grid-template-columns: 1fr;
+  }
+}

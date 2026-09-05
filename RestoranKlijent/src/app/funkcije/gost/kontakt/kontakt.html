@@ -1,0 +1,175 @@
+<section class="naslovna">
+  <div class="container">
+    <span class="eyebrow">Javite nam se</span>
+    <h1>Kontakt</h1>
+    <p>Pitanje, pohvala ili zahtev za rezervaciju — odgovaramo u toku istog dana.</p>
+  </div>
+</section>
+
+<div class="container raspored">
+  <aside class="podaci">
+    @if (postavke(); as p) {
+      <dl>
+        <div>
+          <dt>Adresa</dt>
+          <dd>{{ p.adresa }}</dd>
+        </div>
+        <div>
+          <dt>Telefon</dt>
+          <dd><a [href]="'tel:' + p.telefon">{{ p.telefon }}</a></dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd><a [href]="'mailto:' + p.email">{{ p.email }}</a></dd>
+        </div>
+        <div>
+          <dt>Radno vreme</dt>
+          <dd>{{ p.radnoVreme }}</dd>
+        </div>
+      </dl>
+
+      @if (p.facebookUrl || p.instagramUrl) {
+        <div class="mreze">
+          @if (p.facebookUrl) {
+            <a [href]="p.facebookUrl" target="_blank" rel="noopener noreferrer">Facebook</a>
+          }
+          @if (p.instagramUrl) {
+            <a [href]="p.instagramUrl" target="_blank" rel="noopener noreferrer">Instagram</a>
+          }
+        </div>
+      }
+
+      @if (mapaUrl(); as m) {
+        <div class="mapa">
+          <iframe [src]="m" title="Mapa — lokacija restorana" loading="lazy"></iframe>
+        </div>
+        @if (linkZaMapu(); as l) {
+          <a class="veca-mapa" [href]="l" target="_blank" rel="noopener noreferrer">Otvori veću mapu →</a>
+        }
+      }
+    } @else {
+      <div class="skeleton podaci-skeleton"></div>
+    }
+  </aside>
+
+  <section class="form-wrap">
+    @if (poslato()) {
+      <div class="uspeh">
+        <span class="kvacica" aria-hidden="true">✓</span>
+        <h2>Poruka je poslata</h2>
+        <p>
+          Hvala što ste nam pisali. Javljamo se na ostavljeni kontakt, obično u toku istog dana.
+        </p>
+        <button type="button" class="btn-secondary" (click)="novaPoruka()">Pošalji još jednu</button>
+      </div>
+    } @else {
+      <form [formGroup]="forma" (ngSubmit)="posalji()" novalidate>
+        <h2>Pošaljite poruku</h2>
+
+        @if (auth.prijavljen()) {
+          <p class="napomena-prijava">
+            Prijavljeni ste kao <strong>{{ auth.punoIme() }}</strong> — ime, email i telefon
+            uzimamo sa vašeg naloga.
+          </p>
+        } @else {
+          <div class="red">
+            <label class="polje">
+              <span>Ime i prezime <em>*</em></span>
+              <input type="text" formControlName="ime" autocomplete="name" maxlength="100" />
+              @if (forma.controls.ime.touched && forma.controls.ime.invalid) {
+                <small class="greska-polja">
+                  {{
+                forma.controls.ime.getError('server') ??
+                  (forma.controls.ime.hasError('pattern')
+                    ? 'Dozvoljena su samo slova, razmak, crtica i apostrof.'
+                    : 'Ime je obavezno, najmanje dva slova.')
+              }}
+                </small>
+              }
+            </label>
+
+            <label class="polje">
+              <span>Email <em>*</em></span>
+              <input type="email" formControlName="email" autocomplete="email" />
+              @if (forma.controls.email.touched && forma.controls.email.invalid) {
+                <small class="greska-polja">
+                  {{ forma.controls.email.getError('server') ?? 'Unesite ispravnu email adresu.' }}
+                </small>
+              }
+            </label>
+          </div>
+
+          <label class="polje">
+            <span>Telefon <em>*</em></span>
+            <input type="tel" formControlName="telefon" autocomplete="tel" placeholder="064 123 456" />
+            @if (forma.controls.telefon.touched && forma.controls.telefon.invalid) {
+              <small class="greska-polja">
+                {{
+                  forma.controls.telefon.getError('server') ??
+                    'Nije ispravan broj. Primeri: 064 123 4567, 021/555-123, +381641234567.'
+                }}
+              </small>
+            }
+          </label>
+        }
+
+        <label class="polje">
+          <span>Kategorija <em>*</em></span>
+          <select formControlName="kategorija">
+            @for (k of kategorije(); track k) {
+              <option [value]="k">{{ nazivKategorije[k] }}</option>
+            }
+          </select>
+        </label>
+
+        @if (jeRezervacija()) {
+          <div class="red rezervacija">
+            <label class="polje">
+              <span>Željeni datum i vreme <em>*</em></span>
+              <input type="datetime-local" formControlName="zeljeniDatumVreme" [min]="najranijiTermin()" />
+              @if (forma.controls.zeljeniDatumVreme.touched && forma.controls.zeljeniDatumVreme.invalid) {
+                <small class="greska-polja">
+                  {{ forma.controls.zeljeniDatumVreme.getError('server') ?? 'Izaberite termin u budućnosti.' }}
+                </small>
+              }
+            </label>
+
+            <label class="polje">
+              <span>Broj gostiju <em>*</em></span>
+              <input type="number" formControlName="zeljeniBrojGostiju" min="1" max="50" />
+              @if (forma.controls.zeljeniBrojGostiju.touched && forma.controls.zeljeniBrojGostiju.invalid) {
+                <small class="greska-polja">
+                  {{ forma.controls.zeljeniBrojGostiju.getError('server') ?? 'Unesite broj gostiju (1–50).' }}
+                </small>
+              }
+            </label>
+          </div>
+
+          <p class="napomena">
+            Ovo je <strong>zahtev</strong>, ne potvrđena rezervacija. Proveravamo slobodne stolove
+            i šaljemo vam kod rezervacije na email.
+          </p>
+        }
+
+        <label class="polje">
+          <span>Poruka <em>*</em></span>
+          <textarea formControlName="tekst" rows="6" maxlength="2000"></textarea>
+          <span class="brojac">{{ forma.controls.tekst.value.length }} / 2000</span>
+          @if (forma.controls.tekst.touched && forma.controls.tekst.invalid) {
+            <small class="greska-polja">
+              {{ forma.controls.tekst.getError('server') ?? 'Tekst poruke je obavezan.' }}
+            </small>
+          }
+        </label>
+
+        @if (greska()) {
+          <p class="greska-opsta">{{ greska() }}</p>
+        }
+
+        <button type="submit" class="btn-primary" [disabled]="salje()">
+          {{ salje() ? 'Šalje se…' : 'Pošalji poruku' }}
+        </button>
+      </form>
+    }
+  </section>
+</div>

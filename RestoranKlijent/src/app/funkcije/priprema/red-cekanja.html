@@ -1,0 +1,135 @@
+<div class="traka">
+  <div class="container content">
+    <div class="ko">
+      <strong>{{ naslov() }} — red čekanja</strong>
+      <span class="uloga">{{ auth.punoIme() }} · {{ uloga() }}</span>
+    </div>
+
+    <nav class="kartice" aria-label="Radni deo">
+      <a routerLink="/osoblje" class="nazad">Moj nalog</a>
+    </nav>
+
+    @if (veza.stanje() !== 'povezano') {
+      <span class="veza" [class.pada]="veza.stanje() === 'prekinuto'">
+        @switch (veza.stanje()) {
+          @case ('povezivanje') {
+            Povezivanje…
+          }
+          @case ('prekinuto') {
+            Veza je prekinuta — osvežavajte ručno
+          }
+          @default {
+            Bez veze
+          }
+        }
+      </span>
+    }
+  </div>
+</div>
+
+<div class="container page-content">
+  <div class="alatka">
+    @if (!ucitava() && !greska()) {
+      <div class="pregled">
+        <span><strong>{{ cekaju().length }}</strong> čeka</span>
+        <span class="razmak">·</span>
+        <span><strong>{{ uPripremi().length }}</strong> u pripremi</span>
+
+        @if (mojih() > 0) {
+          <span class="moje-ukupno">{{ mojih() }} kod mene</span>
+        }
+        @if (kasne() > 0) {
+          <span class="kasne-ukupno">{{ kasne() }} kasni</span>
+        }
+      </div>
+    }
+
+    <button type="button" class="btn-outline" (click)="osvezi()" [disabled]="ucitava()">Osveži</button>
+  </div>
+
+  @if (ucitava()) {
+    <div class="skeleton"></div>
+  } @else if (greska()) {
+    <div class="poruka greska">
+      <h3>Greška</h3>
+      <p>{{ greska() }}</p>
+      <button type="button" class="btn" (click)="osvezi()">Pokušaj ponovo</button>
+    </div>
+  } @else if (prazno()) {
+    <div class="poruka">
+      <h3>Red je prazan</h3>
+      <p>Čim konobar pošalje porudžbinu, pojaviće se ovde sama — bez osvežavanja.</p>
+    </div>
+  } @else {
+    @if (cekaju().length) {
+      <h2>Čeka preuzimanje</h2>
+      <div class="grid">
+        @for (x of cekaju(); track x.s.id) {
+          <article
+            class="stavka"
+            [class.pozno]="x.hitnost === 'pozno'"
+            [class.kasni]="x.hitnost === 'kasni'"
+          >
+            <div class="vrh">
+              <span class="sto">Sto {{ x.s.brojStola }}</span>
+              <span class="cekanje">{{ cekanje(x.minuta) }}</span>
+            </div>
+
+            <p class="naziv"><strong>{{ x.s.kolicina }}×</strong> {{ x.s.nazivStavke }}</p>
+
+            @if (x.s.napomena) {
+              <p class="napomena-stavke">{{ x.s.napomena }}</p>
+            }
+
+            <button
+              type="button"
+              class="btn"
+              [disabled]="uToku() === x.s.id"
+              (click)="preuzmi(x)"
+            >
+              Preuzmi
+            </button>
+          </article>
+        }
+      </div>
+    }
+
+    @if (uPripremi().length) {
+      <h2>U pripremi</h2>
+      <div class="grid">
+        @for (x of uPripremi(); track x.s.id) {
+          <article
+            class="stavka u-pripremi"
+            [class.tudja]="!x.s.mojaStavka"
+            [class.pozno]="x.hitnost === 'pozno'"
+            [class.kasni]="x.hitnost === 'kasni'"
+          >
+            <div class="vrh">
+              <span class="sto">Sto {{ x.s.brojStola }}</span>
+              <span class="cekanje">{{ cekanje(x.minuta) }}</span>
+            </div>
+
+            <p class="naziv"><strong>{{ x.s.kolicina }}×</strong> {{ x.s.nazivStavke }}</p>
+
+            @if (x.s.napomena) {
+              <p class="napomena-stavke">{{ x.s.napomena }}</p>
+            }
+
+            @if (x.s.mojaStavka) {
+              <button
+                type="button"
+                class="btn"
+                [disabled]="uToku() === x.s.id"
+                (click)="zavrsi(x)"
+              >
+                Gotovo
+              </button>
+            } @else {
+              <p class="sprema">Sprema: {{ x.s.pripremioIme }}</p>
+            }
+          </article>
+        }
+      </div>
+    }
+  }
+</div>

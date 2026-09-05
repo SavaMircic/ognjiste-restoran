@@ -1,0 +1,19 @@
+<section class="naslovna">
+  <div class="container">
+    <span class="eyebrow">Vaš nalog</span>
+    <h1>{{ auth.punoIme() }}</h1>
+    @if (!jeGost()) {
+      <p>Prijavljeni ste kao osoblje ({{ auth.uloge().join(', ') }}).</p>
+    }
+  </div>
+</section>
+
+<div class="container">
+  <nav class="kartice" aria-label="Delovi naloga">
+    @for (k of kartice(); track k.putanja) {
+      <a [routerLink]="k.putanja" routerLinkActive="aktivna">{{ k.naziv }}</a>
+    }
+  </nav>
+
+  <router-outlet />
+</div>

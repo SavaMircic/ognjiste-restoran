@@ -1,0 +1,121 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.filteri {
+  display: flex;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+
+  .polje {
+    min-width: 170px;
+  }
+}
+
+.forma {
+  margin-bottom: var(--r-4);
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--r-3);
+  align-items: start;
+}
+
+.usko {
+  max-width: 200px;
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+  margin-bottom: var(--r-3);
+}
+
+.rezervacija {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+}
+
+.vreme {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+
+  strong {
+    font-size: 18px;
+    color: var(--tekst);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta {
+    margin: 0;
+  }
+}
+
+.ime {
+  margin: 0 0 2px;
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.podaci .meta {
+  margin: 0;
+}
+
+code {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--tekst-2);
+  background: var(--povrsina-2);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+@media (max-width: 900px) {
+  .red {
+    grid-template-columns: 1fr;
+  }
+
+  .usko {
+    max-width: none;
+  }
+
+  .rezervacija {
+    grid-template-columns: 80px 1fr;
+    row-gap: var(--r-1);
+  }
+}

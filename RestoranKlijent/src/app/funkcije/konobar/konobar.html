@@ -1,0 +1,35 @@
+<div class="traka">
+  <div class="container content">
+    <div class="ko">
+      <strong>{{ auth.punoIme() }}</strong>
+      <span class="uloga">Konobar</span>
+    </div>
+
+    <nav class="kartice" aria-label="Konobarski deo">
+      @for (k of kartice; track k.putanja) {
+        <a [routerLink]="k.putanja" routerLinkActive="aktivna">{{ k.naziv }}</a>
+      }
+      <a routerLink="/osoblje" class="nazad">Moj nalog</a>
+    </nav>
+
+    @if (veza.stanje() !== 'povezano') {
+      <span class="veza" [class.pada]="veza.stanje() === 'prekinuto'">
+        @switch (veza.stanje()) {
+          @case ('povezivanje') {
+            Povezivanje sa kuhinjom…
+          }
+          @case ('prekinuto') {
+            Veza sa kuhinjom je prekinuta — osvežite ručno
+          }
+          @default {
+            Bez veze sa kuhinjom
+          }
+        }
+      </span>
+    }
+  </div>
+</div>
+
+<div class="container page-content">
+  <router-outlet />
+</div>

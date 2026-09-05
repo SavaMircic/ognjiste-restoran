@@ -1,0 +1,46 @@
+.paginacija {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--r-1);
+  margin: var(--r-5) 0 var(--r-4);
+  flex-wrap: wrap;
+}
+
+button {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  background: var(--povrsina);
+  color: var(--tekst-2);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover:not(:disabled):not(.aktivna) {
+    color: var(--tekst);
+    border-color: var(--tekst-3);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  &.aktivna {
+    background: var(--bakar);
+    border-color: var(--bakar);
+    color: var(--pozadina);
+    font-weight: 700;
+  }
+}
+
+.tackice {
+  color: var(--tekst-3);
+  padding: 0 var(--r-1);
+}

@@ -1,0 +1,193 @@
+Kredencijali
+------------------------------------------------------------------------
+
+  Uloga           Email                    Lozinka         Ime
+  -------------   ----------------------   -------------   ------------------
+  Administrator   admin@restoran.com       Admin1234       Ana Popović
+  Menadžer        menadzer@restoran.com    Menadzer1234    Mina Jovanović
+  Konobar         konobar@restoran.com     Konobar1234     Kosta Ilić
+  Šanker          sanker@restoran.com      Sanker1234      Sanja Đurić
+  Kuvar           kuvar@restoran.com       Kuvar1234       Miloš Vasić
+  Gost            petar@test.com           Korisnik1234    Petar Lazić
+  Gost            ana@test.com             Korisnik1234    Ana Kovačević
+
+
+Funkcionalnosti po ulogama
+------------------------------------------------------------------------
+
+
+1. Gost
+
+    1.  Pregled menija po kategorijama
+    2.  Pretraga i listanje jela
+    3.  Detaljan prikaz jela
+    4.  Galerija restorana
+    5.  Stranica „Naš tim"
+    6.  Kontakt podaci i lokacija
+    7.  Pregled recenzija
+    8.  Slanje poruke restoranu
+    9.  Registracija naloga
+    10. Potvrda mejl adrese
+    11. Ponovno slanje linka za potvrdu
+    12. Prijava na sistem
+    13. Obnavljanje sesije
+    14. Zahtev za reset lozinke
+    15. Postavljanje nove lozinke
+
+
+2. Registrovan korisnik
+
+    1.  Provera slobodnih stolova
+    2.  Rezervacija stola
+    3.  Pregled sopstvenih rezervacija
+    4.  Otkazivanje rezervacije
+    5.  Označavanje omiljenog jela
+    6.  Uklanjanje oznake omiljenog
+    7.  Lista omiljenih jela
+    8.  Pisanje recenzije
+    9.  Izmena sopstvene recenzije
+    10. Brisanje sopstvene recenzije
+    11. Pregled sopstvene prepiske
+
+
+3. Svaki prijavljen korisnik
+
+    1.  Pregled sopstvenog profila
+    2.  Izmena profila
+    3.  Postavljanje profilne fotografije
+    4.  Promena lozinke
+
+
+4. Konobar
+
+    1.  Pregled rasporeda stolova
+    2.  Rezervacije za tekući dan
+    3.  Prijava dolaska gosta
+    4.  Označavanje rezervacije isteklom
+    5.  Otvaranje porudžbine za sto
+    6.  Pregled aktivnih porudžbina
+    7.  Detaljan prikaz porudžbine
+    8.  Dodavanje stavki u porudžbinu
+    9.  Otkazivanje stavke
+    10. Isporuka stavke gostu
+    11. Zatvaranje porudžbine i naplata
+    12. Preuzimanje računa
+
+
+5. Kuvar
+
+    1.  Red čekanja u kuhinji
+    2.  Preuzimanje stavke u pripremu
+    3.  Završetak pripreme
+
+
+6. Šanker
+
+    1.  Red čekanja na šanku
+    2.  Preuzimanje stavke u pripremu
+    3.  Završetak pripreme
+
+
+7. Zajedničko za osoblje
+
+    1.  Pregled sopstvenog rasporeda
+    2.  Sopstvena statistika učinka
+    3.  Istorija rada
+    4.  Pregled sopstvenih bonusa
+    5.  Prijava problema
+    6.  Pregled sopstvenih prijava
+
+
+8. Administrator
+
+  Korisnički nalozi
+    1.  Pretraga korisnika
+    2.  Detaljan prikaz korisnika
+    3.  Blokiranje naloga
+    4.  Ukidanje blokade
+    5.  Zabrana komentarisanja
+    6.  Ukidanje zabrane komentarisanja
+
+  Zaposleni
+    7.  Pretraga zaposlenih
+    8.  Zapošljavanje radnika
+    9.  Izmena podataka o zaposlenom
+    10. Deaktivacija zaposlenog
+    11. Uređivanje javnog profila radnika
+    12. Postavljanje fotografije radnika
+
+  Meni
+    13. Kreiranje kategorije
+    14. Izmena kategorije
+    15. Brisanje kategorije
+    16. Kreiranje jela
+    17. Izmena jela
+    18. Promena dostupnosti jela
+    19. Brisanje jela
+
+  Fotografije jela
+    20. Postavljanje glavne fotografije
+    21. Dodavanje fotografije u galeriju jela
+    22. Pregled galerije jela
+    23. Brisanje fotografije
+    24. Promena redosleda fotografija
+
+  Receptura
+    25. Pregled recepture jela
+    26. Dodavanje namirnice u recepturu
+    27. Izmena količine u recepturi
+    28. Uklanjanje namirnice iz recepture
+
+  Galerija restorana
+    29. Pregled galerije
+    30. Dodavanje fotografije
+    31. Izmena podataka o fotografiji
+    32. Brisanje fotografije
+
+  Komunikacija sa gostima
+    33. Pretraga pristiglih poruka
+    34. Odgovor na poruku
+    35. Označavanje poruke pročitanom
+    36. Odgovor na recenziju
+    37. Brisanje neprimerene recenzije
+
+  Rezervacije i stolovi
+    38. Unos rezervacije primljene telefonom
+    39. Pretraga svih rezervacija
+    40. Kreiranje stola
+    41. Izmena stola
+
+  Postavke i nadzor
+    42. Izmena postavki restorana
+    43. Pretraga dnevnika izmena
+    44. Pregled administratorskih mera
+    45. Administratorska kontrolna tabla
+
+
+9. Menadžer
+
+    1.  Menadžerska kontrolna tabla
+
+  Izveštaji
+    2.  Izveštaj o prihodu
+    3.  Izveštaj o učinku zaposlenih
+    4.  Izveštaj o najtraženijim jelima
+
+  Zalihe
+    5.  Pregled namirnica
+    6.  Lista za nabavku
+    7.  Unos nove namirnice
+    8.  Izmena namirnice
+    9.  Korekcija količine
+
+  Raspored rada
+    10. Pregled nedeljnog rasporeda
+    11. Kreiranje smene
+    12. Izmena smene
+    13. Brisanje smene
+
+  Nagrađivanje i problemi
+    14. Pregled dodeljenih bonusa
+    15. Dodela bonusa
+    16. Pretraga prijava problema
+    17. Rešavanje prijave

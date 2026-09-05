@@ -1,0 +1,159 @@
+@use '../osoblje/zajednicko' as o;
+
+@include o.radna-traka;
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.veza {
+  font-size: 12px;
+  color: var(--tekst-3);
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  padding: 4px 12px;
+
+  &.pada {
+    color: var(--greska);
+    border-color: var(--greska);
+  }
+}
+
+.alatka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.pregled {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  font-size: 14px;
+  color: var(--tekst-2);
+
+  strong {
+    color: var(--tekst);
+  }
+}
+
+.razmak {
+  color: var(--tekst-3);
+}
+
+.moje-ukupno,
+.kasne-ukupno {
+  margin-left: var(--r-1);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 12px;
+  border: 1px solid currentcolor;
+}
+
+.moje-ukupno {
+  color: var(--bakar);
+}
+
+.kasne-ukupno {
+  color: var(--greska);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--r-2);
+  margin-bottom: var(--r-4);
+}
+
+.stavka {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-left: 4px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+
+  &.pozno {
+    border-left-color: var(--upozorenje);
+  }
+
+  &.kasni {
+    border-left-color: var(--greska);
+  }
+
+  &.u-pripremi {
+    background: var(--povrsina-2);
+  }
+
+  &.tudja {
+    opacity: 0.6;
+  }
+
+  .btn {
+    align-self: stretch;
+    text-align: center;
+    margin-top: auto;
+  }
+}
+
+.vrh {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--r-2);
+}
+
+.sto {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--tekst);
+}
+
+.cekanje {
+  font-size: 12px;
+  color: var(--tekst-3);
+  white-space: nowrap;
+
+  .pozno & {
+    color: var(--upozorenje);
+    font-weight: 700;
+  }
+
+  .kasni & {
+    color: var(--greska);
+    font-weight: 700;
+  }
+}
+
+.naziv {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--tekst);
+
+  strong {
+    color: var(--bakar);
+  }
+}
+
+.napomena-stavke {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--upozorenje);
+  border-left: 2px solid var(--upozorenje);
+  padding-left: var(--r-2);
+}
+
+.sprema {
+  margin: auto 0 0;
+  font-size: 12px;
+  color: var(--tekst-3);
+}

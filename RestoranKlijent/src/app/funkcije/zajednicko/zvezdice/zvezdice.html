@@ -1,0 +1,7 @@
+@if (ocena() !== null) {
+  <span class="zvezde" role="img" [attr.aria-label]="opis()">
+    @for (puna of zvezde(); track $index) {
+      <span aria-hidden="true" [class.puna]="puna">★</span>
+    }
+  </span>
+}

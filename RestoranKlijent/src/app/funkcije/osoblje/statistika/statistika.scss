@@ -1,0 +1,104 @@
+@use '../zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-2);
+}
+
+.predlozi {
+  display: flex;
+  gap: var(--r-1);
+}
+
+.period {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+
+  .polje {
+    gap: 3px;
+
+    > span {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tekst-3);
+    }
+
+    input {
+      padding: 8px 10px;
+      font-size: 14px;
+      width: auto;
+    }
+
+    input[type='date']::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.6;
+    }
+  }
+
+  .btn {
+    align-self: flex-end;
+    padding: 10px 22px;
+  }
+}
+
+.napomena {
+  margin-bottom: var(--r-3);
+}
+
+section {
+  margin-bottom: var(--r-4);
+}
+
+.brojke {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--r-2);
+}
+
+.brojka {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  strong {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--tekst);
+    line-height: 1.1;
+
+    small {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--tekst-3);
+    }
+  }
+
+  strong.istaknuto {
+    color: var(--bakar);
+  }
+}
+
+.oznaka {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tekst-3);
+}

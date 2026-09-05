@@ -1,0 +1,193 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.filteri {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--r-4);
+  flex-wrap: wrap;
+
+  .polje {
+    min-width: 220px;
+  }
+}
+
+.prekidac-polje {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  font-size: 13px;
+  color: var(--tekst-2);
+  cursor: pointer;
+  padding-bottom: 10px;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--bakar);
+    cursor: pointer;
+  }
+}
+
+.nabavka {
+  margin-bottom: var(--r-4);
+  padding: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--upozorenje);
+  border-radius: var(--zaobljenje);
+
+  h2 {
+    color: var(--upozorenje);
+  }
+}
+
+.lista-nabavke {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.red-nabavke {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: baseline;
+  gap: var(--r-3);
+  padding: 5px 0;
+
+  .naziv {
+    color: var(--tekst);
+    font-size: 14px;
+  }
+
+  .stanje {
+    font-size: 12px;
+    color: var(--tekst-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .predlog {
+    font-size: 13px;
+    color: var(--upozorenje);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+}
+
+.panel {
+  margin-bottom: var(--r-4);
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: var(--r-3);
+  align-items: start;
+}
+
+.usko {
+  min-width: 130px;
+  max-width: 190px;
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.upozorenje {
+  color: var(--upozorenje);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+}
+
+.namirnica {
+  display: grid;
+  grid-template-columns: 1fr 120px 150px auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-left: 3px solid transparent;
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+
+  &.ispod {
+    border-left-color: var(--upozorenje);
+  }
+}
+
+.naziv {
+  margin: 0;
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.podaci .meta {
+  margin: 2px 0 0;
+}
+
+.stanje {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  justify-content: flex-end;
+
+  strong {
+    font-size: 19px;
+    color: var(--tekst);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .jedinica {
+    font-size: 12px;
+    color: var(--tekst-3);
+  }
+}
+
+@media (max-width: 900px) {
+  .red {
+    grid-template-columns: 1fr;
+  }
+
+  .usko {
+    max-width: none;
+  }
+
+  .namirnica {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--r-2);
+  }
+
+  .namirnica .akcije {
+    grid-column: 1 / -1;
+  }
+
+  .red-nabavke {
+    grid-template-columns: 1fr;
+    row-gap: 2px;
+  }
+}

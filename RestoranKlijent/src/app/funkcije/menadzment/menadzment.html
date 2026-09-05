@@ -1,0 +1,19 @@
+<div class="traka">
+  <div class="container content">
+    <div class="ko">
+      <strong>{{ auth.punoIme() }}</strong>
+      <span class="uloga">Menadžer</span>
+    </div>
+
+    <nav class="kartice" aria-label="Menadžment">
+      @for (k of kartice; track k.putanja) {
+        <a [routerLink]="k.putanja" routerLinkActive="aktivna">{{ k.naziv }}</a>
+      }
+      <a routerLink="/osoblje" class="nazad">Moj nalog</a>
+    </nav>
+  </div>
+</div>
+
+<div class="container page-content">
+  <router-outlet />
+</div>

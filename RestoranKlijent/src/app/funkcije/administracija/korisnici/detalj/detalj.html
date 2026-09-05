@@ -1,0 +1,182 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <a routerLink="/administracija/korisnici" class="btn-outline">Nazad na korisnike</a>
+  </div>
+} @else if (detalj(); as d) {
+  <div class="zaglavlje">
+    <div>
+      <a routerLink="/administracija/korisnici" class="nazad">‹ Korisnici</a>
+      <h1>{{ d.profil.ime }} {{ d.profil.prezime }}</h1>
+      <p class="meta">
+        {{ d.profil.email }}
+        @if (d.profil.brojTelefona) {
+          · {{ d.profil.brojTelefona }}
+        }
+        · registrovan {{ d.profil.datumRegistracije | datumS: 'd. MMMM yyyy.' }}
+      </p>
+    </div>
+
+    <div class="statusi">
+      @if (d.profil.blokiran) {
+        <span class="status odbijena">
+          @if (d.profil.blokiranDo) {
+            Blokiran do {{ d.profil.blokiranDo | datumS: 'd.M.yyyy.' }}
+          } @else {
+            Trajno blokiran
+          }
+        </span>
+      } @else {
+        <span class="status resena">Aktivan</span>
+      }
+
+      @if (d.profil.zabranaKomentarisanjaDo) {
+        <span class="status u-obradi">
+          Bez recenzija do {{ d.profil.zabranaKomentarisanjaDo | datumS: 'd.M.yyyy.' }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="brojke">
+    <div class="brojka">
+      <span class="oznaka">Potrošeno</span>
+      <strong>{{ d.ukupnoPotroseno.toFixed(0) }} <small>RSD</small></strong>
+    </div>
+    <div class="brojka">
+      <span class="oznaka">Napojnica</span>
+      <strong>{{ d.ukupnaNapojnica.toFixed(0) }} <small>RSD</small></strong>
+    </div>
+    <div class="brojka">
+      <span class="oznaka">Poseta</span>
+      <strong>{{ d.racuni.length }}</strong>
+    </div>
+    <div class="brojka">
+      <span class="oznaka">Pojavljivanje</span>
+      <strong>
+        @if (d.pouzdanost.procenatPojavljivanja !== null) {
+          {{ d.pouzdanost.procenatPojavljivanja }}<small>%</small>
+        } @else {
+          —
+        }
+      </strong>
+    </div>
+  </div>
+
+  <p class="napomena">
+    Rezervacije: {{ d.pouzdanost.realizovane }} realizovanih ·
+    {{ d.pouzdanost.istekle }} neodržanih · {{ d.pouzdanost.otkazane }} otkazanih ·
+    {{ d.pouzdanost.aktivne }} aktivnih. Podatak je informativan i ne povlači meru sam.
+  </p>
+
+  <section class="celina">
+    <h2>
+      Recenzije ({{ d.recenzije.length }})
+      @if (uklonjenih() > 0) {
+        <span class="meta">· {{ uklonjenih() }} uklonjenih</span>
+      }
+    </h2>
+
+    @if (d.recenzije.length) {
+      <div class="lista">
+        @for (r of d.recenzije; track r.id) {
+          <div class="red-zapisa" [class.uklonjena]="!r.aktivan">
+            <span class="ocena">{{ zvezdice(r.ocena) }}</span>
+            <div class="podaci">
+              <p class="naslov">{{ r.naslov || 'bez naslova' }}</p>
+              <p class="meta">
+                {{ r.tipRecenzije }}
+                @if (r.nazivStavke) {
+                  · {{ r.nazivStavke }}
+                }
+                · {{ r.datumKreiranja | datumS: 'd.M.yyyy.' }}
+              </p>
+            </div>
+            @if (!r.aktivan) {
+              <span class="status odbijena">Uklonjena</span>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="napomena">Korisnik nije napisao nijednu recenziju.</p>
+    }
+  </section>
+
+  <section class="celina">
+    <h2>Rezervacije ({{ d.rezervacije.length }})</h2>
+
+    @if (d.rezervacije.length) {
+      <div class="lista">
+        @for (r of d.rezervacije; track r.id) {
+          <div class="red-zapisa">
+            <span class="kod"><code>{{ r.kodRezervacije }}</code></span>
+            <div class="podaci">
+              <p class="naslov">{{ r.datumVreme | datumS: 'd.M.yyyy. HH:mm' }}</p>
+              <p class="meta">{{ r.brojGostiju }} gostiju</p>
+            </div>
+            <span class="status" [class]="'status ' + klasaStatusa[r.status]">
+              {{ nazivStatusa[r.status] }}
+            </span>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="napomena">Korisnik nema nijednu rezervaciju.</p>
+    }
+  </section>
+
+  <section class="celina">
+    <h2>Računi ({{ d.racuni.length }})</h2>
+
+    @if (d.racuni.length) {
+      <div class="lista">
+        @for (r of d.racuni; track r.porudzbinaId) {
+          <div class="red-zapisa">
+            <span class="kod">Sto {{ r.brojStola }}</span>
+            <div class="podaci">
+              <p class="naslov">{{ r.ukupno.toFixed(2) }} RSD</p>
+              <p class="meta">
+                {{ r.vremeZatvaranja | datumS: 'd.M.yyyy. HH:mm' }}
+                @if (r.napojnica) {
+                  · napojnica {{ r.napojnica.toFixed(0) }} RSD
+                }
+                @if (r.kodRezervacije) {
+                  · <code>{{ r.kodRezervacije }}</code>
+                }
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="napomena">
+        Nema računa vezanih za ovog gosta. Račun se vezuje za nalog samo kad je sto
+        otvoren preko njegove rezervacije.
+      </p>
+    }
+  </section>
+
+  <section class="celina">
+    <h2>Poruke ({{ d.poruke.length }})</h2>
+
+    @if (d.poruke.length) {
+      <div class="lista">
+        @for (p of d.poruke; track p.id) {
+          <div class="red-zapisa">
+            <span class="kod">{{ p.kategorija }}</span>
+            <div class="podaci">
+              <p class="meta">{{ p.datumSlanja | datumS: 'd.M.yyyy. HH:mm' }}</p>
+            </div>
+            <span class="status">{{ p.status }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="napomena">Korisnik nije slao poruke kroz kontakt formu.</p>
+    }
+  </section>
+}

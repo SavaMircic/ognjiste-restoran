@@ -1,0 +1,110 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.filteri {
+  display: flex;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+
+  .polje {
+    min-width: 190px;
+  }
+}
+
+.forma {
+  margin-bottom: var(--r-4);
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--r-3);
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+
+  .napomena {
+    max-width: 52ch;
+  }
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-1);
+  margin-bottom: var(--r-3);
+}
+
+.zaposleni {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-2) var(--r-3);
+
+  &.neaktivan {
+    opacity: 0.55;
+  }
+}
+
+.ime {
+  margin: 0;
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.podaci .meta {
+  margin: 2px 0 0;
+}
+
+.pozicija {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bakar);
+  border: 1px solid var(--bakar);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .red {
+    grid-template-columns: 1fr;
+  }
+
+  .zaposleni {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--r-2);
+  }
+
+  .zaposleni .akcije {
+    grid-column: 1 / -1;
+  }
+}

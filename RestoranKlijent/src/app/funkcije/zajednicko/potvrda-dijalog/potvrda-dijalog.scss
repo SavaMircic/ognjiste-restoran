@@ -1,0 +1,82 @@
+@use '../../../../styles/tokens' as t;
+
+.zatamnjenje {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(10, 8, 7, 0.72);
+  display: grid;
+  place-items: center;
+  padding: var(--r-3);
+}
+
+.okvir {
+  width: min(440px, 100%);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje-veliko);
+  box-shadow: var(--senka);
+  padding: var(--r-4);
+
+  h2 {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  p {
+    color: var(--tekst-2);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: var(--r-2) 0 0;
+  }
+}
+
+.dugmad {
+  display: flex;
+  gap: var(--r-2);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: var(--r-4);
+
+  > * {
+    flex: 1 1 auto;
+  }
+}
+
+.odustani {
+  @include t.dugme-osnova(44px, 22px);
+
+  background: transparent;
+  color: var(--tekst-2);
+  border: 1px solid var(--ivica);
+  font-size: 14px;
+  font-weight: 600;
+
+  &:hover {
+    color: var(--tekst);
+    border-color: var(--tekst-3);
+  }
+}
+
+.potvrdi {
+  @include t.dugme-osnova(44px, 22px);
+  @include t.btn-copper;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+
+  &.opasno {
+    background: var(--greska);
+    color: var(--pozadina);
+  }
+}
+
+@media (max-width: 420px) {
+  .dugmad {
+    flex-direction: column-reverse;
+  }
+}

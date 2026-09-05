@@ -1,0 +1,148 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.prebacivac {
+  display: flex;
+  gap: var(--r-1);
+  margin-bottom: var(--r-2);
+
+  button {
+    background: transparent;
+    border: 1px solid var(--ivica);
+    border-radius: 999px;
+    color: var(--tekst-2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--bakar);
+    }
+
+    &.aktivan {
+      border-color: var(--bakar);
+      color: var(--bakar);
+      background: rgba(194, 112, 61, 0.1);
+    }
+  }
+}
+
+.napomena {
+  max-width: 78ch;
+  margin-bottom: var(--r-3);
+}
+
+code {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 12px;
+  color: var(--tekst-2);
+  background: var(--povrsina-2);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.alatka {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.filteri {
+  display: flex;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+
+  .polje {
+    min-width: 190px;
+  }
+
+  .usko {
+    min-width: 150px;
+    max-width: 170px;
+  }
+}
+
+.neuspesnih {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--greska);
+  border: 1px solid var(--greska);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--r-3);
+}
+
+.zapis {
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  align-items: center;
+  gap: var(--r-3);
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-left: 3px solid transparent;
+  border-radius: var(--zaobljenje);
+  padding: 8px var(--r-3);
+
+  &.neuspeh {
+    border-left-color: var(--greska);
+  }
+
+  &.mera {
+    border-left-color: var(--bakar);
+  }
+}
+
+.vreme {
+  font-size: 12px;
+  color: var(--tekst-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.naslov {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tekst);
+}
+
+.podaci .meta {
+  margin: 1px 0 0;
+}
+
+.cilj {
+  color: var(--tekst-3);
+  font-weight: 400;
+}
+
+.izvrsio {
+  font-size: 12px;
+  color: var(--tekst-2);
+  white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .zapis {
+    grid-template-columns: 1fr;
+    row-gap: 4px;
+  }
+}

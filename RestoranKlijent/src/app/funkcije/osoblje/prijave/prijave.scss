@@ -1,0 +1,135 @@
+@use '../zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+
+  .napomena {
+    max-width: 56ch;
+  }
+}
+
+.forma {
+  margin-bottom: var(--r-4);
+}
+
+.red {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--r-3);
+}
+
+@media (max-width: 560px) {
+  .red {
+    grid-template-columns: 1fr;
+  }
+}
+
+.akcije {
+  display: flex;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+}
+
+.prijava {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+
+  &.visok {
+    border-left: 3px solid var(--upozorenje);
+  }
+}
+
+.zaglavlje {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.naslov {
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.oznake {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.oznaka {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tekst-3);
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  padding: 2px 9px;
+
+  &.prioritet.visok {
+    color: var(--upozorenje);
+    border-color: var(--upozorenje);
+  }
+}
+
+.opis {
+  margin: 0;
+  color: var(--tekst-2);
+  font-size: 14px;
+  white-space: pre-line;
+}
+
+.odgovor {
+  padding: var(--r-2) var(--r-3);
+  border-left: 3px solid var(--bakar);
+  background: var(--povrsina-2);
+  border-radius: 0 var(--zaobljenje) var(--zaobljenje) 0;
+
+  p {
+    margin: 4px 0 0;
+    color: var(--tekst-2);
+    font-size: 13px;
+  }
+
+  .meta {
+    display: block;
+    margin-top: 4px;
+  }
+}
+
+.oznaka-odgovor {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bakar);
+  font-weight: 600;
+}
+
+.ceka {
+  font-style: italic;
+  margin: 0;
+}

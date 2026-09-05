@@ -1,0 +1,163 @@
+@use '../../osoblje/zajednicko' as o;
+
+@include o.osoblje;
+
+:host {
+  display: block;
+}
+
+.alatka {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--r-3);
+}
+
+.filteri {
+  display: flex;
+  gap: var(--r-3);
+  flex-wrap: wrap;
+
+  .polje {
+    min-width: 180px;
+  }
+}
+
+.novih {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--u-toku);
+  border: 1px solid var(--u-toku);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.broj-zapisa {
+  margin: 0 0 var(--r-2);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+  margin-bottom: var(--r-3);
+}
+
+.poruka-red {
+  background: var(--povrsina);
+  border: 1px solid var(--ivica);
+  border-left: 3px solid transparent;
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+
+  &.nova {
+    border-left-color: var(--u-toku);
+  }
+
+  &.prioritetna {
+    border-left-color: var(--upozorenje);
+  }
+}
+
+.vrh {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+.kategorija {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tekst-3);
+  border: 1px solid var(--ivica);
+  border-radius: 999px;
+  padding: 2px 10px;
+  white-space: nowrap;
+
+  &.rezervacija {
+    color: var(--upozorenje);
+    border-color: var(--upozorenje);
+  }
+}
+
+.posiljalac {
+  font-size: 15px;
+  color: var(--tekst);
+}
+
+.vrh .status {
+  margin-left: auto;
+}
+
+.tekst {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tekst-2);
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+.zahtev {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--upozorenje);
+}
+
+.odgovor {
+  padding: var(--r-2) var(--r-3);
+  border-left: 3px solid var(--bakar);
+  background: var(--povrsina-2);
+  border-radius: 0 var(--zaobljenje) var(--zaobljenje) 0;
+
+  p {
+    margin: 4px 0 0;
+    color: var(--tekst-2);
+    font-size: 13px;
+    white-space: pre-line;
+  }
+
+  .meta {
+    display: block;
+    margin-top: 4px;
+  }
+}
+
+.oznaka-odgovor {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bakar);
+  font-weight: 600;
+}
+
+.panel {
+  background: var(--povrsina-2);
+  border: 1px solid var(--ivica);
+  border-radius: var(--zaobljenje);
+  padding: var(--r-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--r-2);
+}
+
+.akcije {
+  display: flex;
+  align-items: center;
+  gap: var(--r-2);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .vrh .status {
+    margin-left: 0;
+  }
+}

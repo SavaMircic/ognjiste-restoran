@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Slika jela nije postavljena">
+  <rect width="400" height="300" fill="#ece7e1"/>
+  <g fill="none" stroke="#b8ad9f" stroke-width="6" stroke-linecap="round">
+    <path d="M158 108v84M158 108c-9 0-16 7-16 16v20c0 9 7 16 16 16"/>
+    <path d="M242 108v40c0 12-9 21-21 21h-2v23"/>
+    <path d="M200 130v62"/>
+  </g>
+  <text x="200" y="228" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#8a8078" text-anchor="middle">Slika nije postavljena</text>
+</svg>

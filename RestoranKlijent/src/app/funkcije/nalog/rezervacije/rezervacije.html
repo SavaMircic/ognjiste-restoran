@@ -1,0 +1,99 @@
+@if (ucitava()) {
+  <div class="skeleton"></div>
+} @else if (greska()) {
+  <div class="poruka greska">
+    <h3>Greška</h3>
+    <p>{{ greska() }}</p>
+    <button type="button" class="btn" (click)="ucitaj()">Pokušaj ponovo</button>
+  </div>
+} @else if (prazno()) {
+  <div class="poruka">
+    <h3>Još nemate rezervacija</h3>
+    <p>Kad rezervišete sto, ovde ćete videti kod i termin.</p>
+    <a routerLink="/rezervacija" class="btn-link">Rezerviši sto</a>
+  </div>
+} @else {
+  @if (realizovanih() || isteklih()) {
+    <p class="sazetak">
+      Dolazili ste <strong>{{ realizovanih() }}</strong>×, a
+      <strong>{{ isteklih() }}</strong>× rezervacija je istekla bez dolaska.
+    </p>
+  }
+
+  @if (aktivne().length) {
+    <h2 class="naslov-grupe">Aktivne</h2>
+    <div class="lista">
+      @for (r of aktivne(); track r.id) {
+        <article class="stavka aktivna">
+          <div class="kod">
+            <span class="oznaka-kod">Kod</span>
+            <strong>{{ r.kodRezervacije }}</strong>
+          </div>
+
+          <div class="podaci">
+            <div class="vrh">
+              <strong class="termin">{{ r.datumVreme | datumS }}</strong>
+              <span class="status aktivna">{{ oznaka(r.status) }}</span>
+            </div>
+
+            <p class="detalj">
+              {{ r.brojeviStolova.length > 1 ? 'Stolovi' : 'Sto' }} br. {{ r.brojeviStolova.join(' i ') }} · {{ r.brojGostiju }} gostiju ·
+              važi do {{ r.vaziDo | datumS: 'HH:mm' }}
+            </p>
+            <p class="detalj meta">Čekamo vas do {{ r.tolerancijaDo | datumS: 'HH:mm' }}.</p>
+          </div>
+
+          <div class="akcija">
+            @if (smeDaOtkaze(r)) {
+              <button
+                type="button"
+                class="btn-danger"
+                [disabled]="otkazujeId() === r.id"
+                (click)="otkazi(r)"
+              >
+                {{ otkazujeId() === r.id ? 'Otkazuje se…' : 'Otkaži' }}
+              </button>
+            } @else {
+              <span class="meta">Rok za otkazivanje je prošao</span>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  @if (istorija().length) {
+    <h2 class="naslov-grupe">Istorija</h2>
+    <div class="lista">
+      @for (r of istorija(); track r.id) {
+        <article class="stavka">
+          <div class="kod">
+            <span class="oznaka-kod">Kod</span>
+            <strong>{{ r.kodRezervacije }}</strong>
+          </div>
+
+          <div class="podaci">
+            <div class="vrh">
+              <strong class="termin">{{ r.datumVreme | datumS }}</strong>
+              <span
+                class="status"
+                [class.realizovana]="r.status === 'Realizovana'"
+                [class.istekla]="r.status === 'Istekla'"
+                [class.otkazana]="r.status === 'Otkazana'"
+              >
+                {{ oznaka(r.status) }}
+              </span>
+            </div>
+
+            <p class="detalj">
+              {{ r.brojeviStolova.length > 1 ? 'Stolovi' : 'Sto' }} br.
+              {{ r.brojeviStolova.join(' i ') }} · {{ r.brojGostiju }} gostiju
+            </p>
+          </div>
+
+          <div class="akcija"></div>
+        </article>
+      }
+    </div>
+  }
+}
