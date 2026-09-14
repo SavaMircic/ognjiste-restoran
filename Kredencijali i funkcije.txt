@@ -1,3 +1,5 @@
+Pri pokretanju projekat potrebno je samo podesiti ConnectionStrings i Jwt
+
 Kredencijali
 ------------------------------------------------------------------------
 
